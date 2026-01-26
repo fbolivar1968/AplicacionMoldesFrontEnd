@@ -1,0 +1,288 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@plugin "@tailwindcss/forms";
+
+@theme {
+    --color-blueFB: #003064;
+    --color-orangeFB: #FF8300;
+    --color-dark-greyFB: #4d4d4d;
+    --color-light-greyFB: #C4C4C4;
+    --color-hoverli: #E8EAF6;
+
+}
+h1 {
+    @apply
+    font-bold
+    text-2xl
+    text-blueFB
+    pb-3
+    ;
+
+}
+h4 {
+    @apply
+    text-shadow-md
+    text-3xl
+    font-bold
+    text-orangeFB
+    p-2
+    ;
+
+}
+
+select {
+    @apply
+    w-[70%]
+    h-[50%]
+    bg-white
+    rounded-sm
+    border-2
+    border-light-greyFB
+    p-2
+    focus:border-blueFB
+    hover:border-blueFB
+}
+
+select:not([multiple]) {
+    border-radius: 0.2rem !important;
+
+}
+
+select[multiple] {
+    border-radius: 0.2rem !important;
+    background-color: #FFFFFF !important;
+}
+
+@layer base {
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="password"],
+    input[type="number"] {
+        @apply
+        bg-white
+        rounded-sm
+        border-2
+        border-light-greyFB
+        p-2
+        focus:border-blueFB
+        hover:border-blueFB
+        font-[Poppins]
+    }
+
+    input[type="date"] {
+        @apply
+        bg-white
+        rounded-lg
+        border-4
+        border-light-greyFB
+        p-2
+        focus:border-blueFB
+        hover:border-blueFB
+    }
+
+    input[type="datetime-local"], input[type="month"], input[type="search"], input[type="tel"], input[type="time"], input[type="week"],
+
+    input[type= "textarea"] {
+        @apply
+        rounded-lg
+        border-light-greyFB
+        focus:border-blueFB
+        hover:border-blueFB
+    }
+
+    select {
+        @apply
+        w-[70%]
+        h-[50%]
+        bg-white
+        rounded-sm
+        border-2
+        border-light-greyFB
+        p-2
+        focus:border-blueFB
+        hover:border-blueFB
+    }
+
+    select:not([multiple]) {
+        border-radius: 0.2rem !important;
+
+    }
+
+    select[multiple] {
+        border-radius: 0.2rem !important;
+        background-color: #FFFFFF !important;
+    }
+
+
+    h1 {
+        @apply
+        font-bold
+        text-5xl
+        text-blueFB
+        m-0
+        ;
+
+    }
+
+    h2 {
+        @apply
+        font-bold
+        text-dark-greyFB
+        p-2
+        ;
+
+    }
+
+    h3 {
+        @apply
+        text-shadow-md
+        font-bold
+        text-orangeFB
+        p-2
+        ;
+
+    }
+
+    h4 {
+        @apply
+        text-shadow-md
+        text-3xl
+        font-bold
+        text-orangeFB
+        p-2
+        ;
+
+    }
+
+    span {
+        @apply
+        text-shadow-white
+        font-semibold
+        block p-2
+        ;
+    }
+
+
+    label {
+        @apply
+        text-blueFB
+        font-semibold
+        block p-2
+        ;
+    }
+
+
+    li {
+        @apply
+        hover:border-orangeFB
+        ;
+    }
+
+    tr:nth-child(even) {
+        @apply bg-blue-50;
+    }
+
+
+}
+
+@layer components {
+    .btn {
+        @apply
+        px-4 py-2 rounded-md mt-10
+        text-white
+        font-bold
+        shadow-2xl
+        ;
+    }
+
+    .btn-orange {
+        @apply
+        bg-orangeFB
+        hover:bg-blueFB
+        ;
+    }
+
+    .btn-blue {
+        @apply
+        bg-blueFB
+        hover:bg-light-greyFB
+        ;
+    }
+
+    .user-container {
+        @apply
+        flex
+        justify-end
+        px-2
+        py-0.5
+        gap-6
+        bg-blueFB
+        hover:border-orangeFB
+        ;
+    }
+
+
+    .molde-list-item {
+        @apply
+        grid
+        grid-cols-[0.2fr_0.3fr_1fr]
+        grid-rows-[1fr_1fr]
+        justify-items-center
+        items-center
+        transition-all duration-500
+        font-semibold
+        text-blueFB
+        bg-blue-50
+        text-lg leading-[1.3]
+        m-[30px];
+    }
+
+    .pagination {
+        @apply
+        justify-items-center
+        items-center
+        transition-all duration-500
+        font-semibold
+        text-blueFB
+        bg-white
+        text-lg leading-[1.3]
+        m-[50px];
+    }
+
+    .card-form {
+        @apply
+        border-2
+        border-light-greyFB
+        rounded-md
+    }
+
+    .card-Mechanics {
+        @apply
+        border-2
+        bg-dark-greyFB
+        text-white
+        shadow-md
+        rounded-md
+        p-2
+        my-4
+        h-auto
+        w-100
+    }
+
+    .dimensions-card {
+        @apply
+        content-evenly
+        w-[70%]
+        h-[50%]
+        bg-white
+        rounded-sm
+        border-1
+        border-orangeFB
+        p-2
+        text-center
+    }
+}
+

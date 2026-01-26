@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "KEY": "MoldName",
+    "LABEL": "Nombre de molde"
+  },
+  {
+    "id": 2,
+    "KEY": "NumPD",
+    "LABEL": "Numero de pedido"
+  },
+  {
+    "id": 3,
+    "KEY": "OP",
+    "LABEL": "Orden de producción"
+  },
+  {
+    "id": 4,
+    "KEY": "InitDate",
+    "LABEL": "Fecha de inicio"
+  },
+  {
+    "id": 5,
+    "KEY": "MoldState",
+    "LABEL": "Estado del molde"
+  },
+  {
+    "id": 6,
+    "KEY": "Comment",
+    "LABEL": "Comentario"
+  },
+  {
+    "id": 7,
+    "MoldName": "M-HX01",
+    "NumPD": "32552",
+    "OP": "87251",
+    "InitDate": "28/10/2025",
+    "MoldState": "Disponible",
+    "Comment": "APLASTAR\nDEFORMAR ÚLTIMO FILETE DE LA\nROSCA"
+  },
+  {
+    "id": 8,
+    "MoldName": "M-HX01",
+    "NumPD": "32054",
+    "OP": "87245",
+    "InitDate": "15/10/2025",
+    "MoldState": "En reparación",
+    "Comment": "-MONTAR EN EL CENTRO DEL\nTROQUEL\n-NO SE MARCA EL GDO DE LA\nTUERCA PORQUE NO ES VISIBLE\nCUANDO SE DEFORMA EL FILETE."
+  },
+  {
+    "id": 9,
+    "MoldName": "M-HX01",
+    "NumPD": "32105",
+    "OP": "871654",
+    "InitDate": "02/05/2025",
+    "MoldState": "En fabricación",
+    "Comment": "REVISAR AJUSTE DE LA MAQUINA\nCON LA QUE SE VA TROQUELAR LA\nTUERCA"
+  },
+  {
+    "id": 10,
+    "MoldName": "M-HX01",
+    "NumPD": "32154",
+    "OP": "87046",
+    "InitDate": "07/01/2025",
+    "MoldState": "Por reparar",
+    "Comment": "APLASTAR\nDEFORMAR ÚLTIMO FILETE DE LA\nROSCA"
+  }
+]

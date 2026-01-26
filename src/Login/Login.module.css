@@ -1,0 +1,164 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.form_login {
+    margin: 0;
+    width: 100%;
+    height: auto;
+    background-color: #242424;
+    font-family: Poppins, sans-serif;
+    overflow: hidden;
+
+}
+
+.rectangle-header {
+    width: 100%;
+    height: 123px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background: #003064;
+    border-color: #FFFFFF00;
+    border-width: 1px;
+    border-style: solid;
+    display: flex;
+    align-content: center;
+}
+
+.img_logo {
+    width: 20%;
+    height: 16%;
+    background: #00000000;
+    position: absolute;
+
+}
+
+.logo_container {
+    width: 16%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    border: #FFFFFF solid 1px;
+    padding: 20px 20px 20px 60px;
+    margin: 10px 10px 10px 10px;
+}
+
+.main_container {
+    max-width: max-content;
+    height: auto;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    margin: auto;
+    display: flex;
+}
+
+.img_forjadora {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../assets/MoldesImg/IMG_Login.JPG');
+    background-size: max(100%);
+    background-repeat: no-repeat;
+    background-position: left;
+    width: 670px;
+    height: 488px;
+    box-shadow: 0px 0px 1px rgba(0, 48, 100, 0);
+    border-width: 1px;
+    border-style: solid;
+    border-color: #242424;
+    padding-top: 5%;
+    font-family: "Poppins", sans-serif;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px
+
+
+}
+
+.text-area-2 {
+    width: 10%;
+    height: 10%;
+    padding: 4px 8px 4px 21px;
+    background: #FFFFFF;
+    color: #C0C0C0;
+    border-color: #FFFFFF00;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px 3px 3px 3px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.3;
+    text-align: left;
+
+}
+
+.title_description {
+    padding: 3px 15px 15px 45px;
+    width: 450px;
+    height: 71px;
+    color: #FFFFFF;
+    font-family: Poppins, serif;
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 1.3;
+    text-align: left;
+    margin-top: 80px;
+
+}
+
+.text_description {
+    padding: 20px 50px 10px 53px;
+    width: 450px;
+    height: 100px;
+    color: #FFFFFF;
+    font-family: Poppins, sans-serif;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 1.3;
+    text-align: left;
+    margin-top: 10px;
+}
+
+.input_login {
+    padding: 4px 8px 4px 8px;
+    background: #FFFFFF;
+    color: #C0C0C0;
+    border-color: #FFFFFF;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px 3px 3px 3px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+
+.h3_ingresar {
+    width: 87px;
+    height: 20px;
+    color: #FFFFFF;
+    font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.button_login {
+    width: 150px;
+    height: 45px;
+    padding: 0px 10px 0px 10px;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.75);
+    background: #FF8F00;
+    color: #FFFFFF;
+    border-color: #FF8F00;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px 3px 3px 3px;
+    font-family: Poppins, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 50px;
+}
+
+.button_login:hover {
+    background-color: #4d4d4d;
+    border-color: #4d4d4d;
+}
+

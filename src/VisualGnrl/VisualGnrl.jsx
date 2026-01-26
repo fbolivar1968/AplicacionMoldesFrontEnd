@@ -8,6 +8,7 @@ import FilterForm from './FilterForm.jsx';
 import Pagination from '../Components/Pagination.jsx';
 import {Link} from "react-router-dom";
 import NavBar from "../Components/NavBar.jsx";
+import ChecklistIcon from '@mui/icons-material/Checklist';
 
 const initialMoldes = [
     {
@@ -102,9 +103,13 @@ function Molde({molde}) {
             <h3 className="col-start-3 row-start-1 justify-self-start bg-blue-50">{molde.name}</h3>
             <p className="col-start-3 row-start-2 row-end-3 justify-self-start bg-blue-50">Máquina: {molde.machine} </p>
 
-            <div className="col-start-5 row-span-2 bg-blue-50">
-                <ModeEditIcon/>
-                <Switch sx={{color: blue[900]}} defaultChecked/>
+            <div className="col-start-5 row-span-2 m-2 bg-blue-50">
+                <Link to="/CreateActivity" >
+                    <ChecklistIcon/>
+                </Link>
+
+
+                {/*<Switch sx={{color: blue[900]}} defaultChecked/>*/}
             </div>
 
         </li>

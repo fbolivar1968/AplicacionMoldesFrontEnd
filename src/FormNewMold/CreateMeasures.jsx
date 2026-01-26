@@ -3,7 +3,7 @@ import NavBar from "../Components/NavBar.jsx";
 import {Link} from "react-router-dom";
 import '../styles/globals.css'
 import FileUploader from "../Components/FileUploader.jsx";
-import CreateMechanical from "./CreateMechanical.jsx";
+
 // import {useForm} from 'react-hook-form';
 // import useFamiliaSchema from "../Hooks/useFamiliaSchema.js";
 

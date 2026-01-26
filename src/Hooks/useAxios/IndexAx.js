@@ -1,10 +1,12 @@
 import axios from 'axios';
 import {useEffect, useState, useRef} from 'react';
+import {FETCH_STATUS} from "./FetchStatus.js";
 
     const useAxios = () => {
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [status, setStatus] = useState(FETCH_STATUS.IDLE);
 
 
     const axiosInstance = axios.create({
@@ -37,11 +39,12 @@ import {useEffect, useState, useRef} from 'react';
         }, []);
 
        const fetchData = async ({url, method, data = {}, params= {}}) => {
+        setStatus(FETCH_STATUS.LOADING);
         setLoading(true);
-           setError("");
+        setError("");
 
-           controllerRef.current.abort();
-           controllerRef.current = new AbortController();
+        controllerRef.current.abort();
+        controllerRef.current = new AbortController();
 
 
         try {
@@ -61,12 +64,14 @@ import {useEffect, useState, useRef} from 'react';
                 });
                 setResponse(result.data);
             }
+            setStatus(FETCH_STATUS.SUCCESS);
         } catch (error) {
             if(axios.isCancel(error)){
                 console.error('Request canceled', error.message)
             }
             else {
-                setError(error.response ? error.response.data : error.message)
+                setError(error.response ? error.response.data : error.message);
+                setStatus(FETCH_STATUS.ERROR);
             }
         } finally {
             setLoading(false);
@@ -76,6 +81,7 @@ import {useEffect, useState, useRef} from 'react';
         response,
         loading,
         error,
+        status,
         fetchData,
     }
 

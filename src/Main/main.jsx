@@ -12,6 +12,7 @@ import CreateUbic from "../FormNewMold/CreateUbic.jsx";
 import VisualMold from "../MoldeHV/VisualMold.jsx";
 import OrdAPiMold from "../Ordenes/OrdAPiMold.jsx";
 import CreateMechanical from "../FormNewMold/CreateMechanical.jsx";
+import CreateActivity from "../Activity/CreateActivity.jsx";
 
 
 
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
     {path: '/VisualMold', element: <VisualMold />},
     {path: '/CreateMechanical', element: <CreateMechanical />},
     {path: '/Login', element: <Login />},
+    {path: '/CreateActivity', element: <CreateActivity />},
 
 
 

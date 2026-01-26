@@ -1,11 +1,13 @@
 import '../styles/globals.css'
 import NavBar from "../Components/NavBar.jsx";
+import FBIcon from "../assets/Icons/FBIcon.png"
 //import Pagination from "../Components/Pagination.jsx";
 import * as React from "react";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
 import {useEffect, useState, useMemo} from "react";
 import Pagination from '@mui/material/Pagination';
 import Stack from "@mui/material/Stack";
+import {FETCH_STATUS} from "../Hooks/useAxios/FetchStatus.js";
 import {
     useReactTable,
     getCoreRowModel,
@@ -17,9 +19,10 @@ import {
 
 
 export default function Orders() {
-    const {response, error, loading, fetchData} = useAxios(); //Response stores the data fetched from API
+    const {response, error, status, fetchData} = useAxios(); //Response stores the data fetched from API
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState([])
+    const isLoading = status === FETCH_STATUS.LOADING;
 
     useEffect(() => {
         fetchData({
@@ -93,7 +96,24 @@ export default function Orders() {
         table.setPageIndex(value - 1);
     };
 
-    if (loading) return <div>Loading...</div>;
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen w-full bg-white fixed top-0 left-0 z-50">
+                <div className="relative">
+                    <img
+                        src={FBIcon}
+                        className="animate-pulse h-24 w-24 object-contain"
+                        alt="Loading..."
+                    />
+                </div>
+                <h2 className="mt-6 text-xl font-semibold text-blueFB animate-pulse">
+                    Cargando Órdenes...
+                </h2>
+            </div>
+        );
+    }
+
     if (error) return <div>Error: {error}</div>;
     return (
 
@@ -108,6 +128,7 @@ export default function Orders() {
                            placeholder="Busca en todos los datos"
                            className="p-2 border border-gray-300 rounded"></input>
                 </div>
+
 
                 <table
                     className="w-full table-fixed border-spacing-2 md:border-spacing-4 border-bg-blueFB bg-bg-blueFB">
@@ -141,6 +162,7 @@ export default function Orders() {
                     ))}
                     </thead>
                     <tbody className="border-b-2 border-light-greyFB">
+                    {isLoading && <div>Loading...{FBIcon}</div>}
                     {table.getRowModel().rows.map(row => (
                         <tr key={row.id} className=" border-2 border-b-dark-greyFB">
                             {row.getVisibleCells().map(cell => (
@@ -154,15 +176,19 @@ export default function Orders() {
                     ))}
                     </tbody>
                 </table>
-                <Stack spacing={2}>
-                    <Pagination
-                        count={table.getPageCount()}
-                        page={table.getState().pagination.pageIndex + 1}
-                        onChange={handlePageChange}
-                        showFirstButton
-                        showLastButton
-                    />
-                </Stack>
+                <div className= "flex justify-center m-2 bg-BlueFB">
+                    <Stack spacing={2}>
+                        <Pagination
+                            count={table.getPageCount()}
+                            page={table.getState().pagination.pageIndex + 1}
+                            onChange={handlePageChange}
+                            showFirstButton
+                            showLastButton
+                        />
+                    </Stack>
+
+                </div>
+
             </div>
         </>
     )

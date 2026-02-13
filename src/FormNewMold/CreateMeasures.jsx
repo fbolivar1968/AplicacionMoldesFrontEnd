@@ -75,7 +75,7 @@ export default function CreateMeasures() {
                     <div className="col-start-2 col-end-4 row-start-1 place-self-center">
 
                         <img className="place-self-center object-cover"
-                             src="src/assets/Squemas/SquemaBristol.png" alt="esquema"/>
+                             src="../assets/Schemas/SquemaBristol.png" alt="esquema"/>
                         <label className="block place-self-center">Esquema: Familia AAA</label>
                     </div>
 

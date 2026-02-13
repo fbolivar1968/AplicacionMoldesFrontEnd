@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import NavBar from "../Components/NavBar.jsx";
 import FBIcon from "../assets/Icons/FBIcon.png"
 //import Pagination from "../Components/Pagination.jsx";
+import LoadingAnimation from "../Components/LoadingAnimation.jsx";
 import * as React from "react";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
 import {useEffect, useState, useMemo} from "react";
@@ -34,24 +35,32 @@ export default function Orders() {
     //Define (Memoizing)Columns
     const columns = useMemo(() => [
         {
-            header: 'Código Herramental',
+            header: 'Cód. Herramental',
             accessorKey: 'codigo_herramental',
         },
         {
-            header: 'Número de pedido',
+            header: 'Núm. Pedido',
             accessorKey: 'numero_pedido',
         },
         {
-            header: 'Orden de Producción',
+            header: 'Estado OP',
+            accessorKey: 'estado_op',
+        },
+        {
+            header: 'Ord. Producción',
             accessorKey: 'consecutivo_op',
         },
         {
-            header: 'Fecha de Inicio',
+            header: 'Fecha Inicio',
             accessorKey: 'fecha_inicio',
         },
         {
             header: 'Producto',
             accessorKey: 'producto',
+        },
+        {
+            header: 'Cód. Producto',
+            accessorKey: 'codigo_producto',
         },
         {
             header: 'Comentario',
@@ -98,20 +107,8 @@ export default function Orders() {
 
 
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen w-full bg-white fixed top-0 left-0 z-50">
-                <div className="relative">
-                    <img
-                        src={FBIcon}
-                        className="animate-pulse h-24 w-24 object-contain"
-                        alt="Loading..."
-                    />
-                </div>
-                <h2 className="mt-6 text-xl font-semibold text-blueFB animate-pulse">
-                    Cargando Órdenes...
-                </h2>
-            </div>
-        );
+        return <LoadingAnimation message="Órdenes con herramentales"/>;
+
     }
 
     if (error) return <div>Error: {error}</div>;

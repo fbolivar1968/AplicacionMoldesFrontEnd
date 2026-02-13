@@ -13,13 +13,14 @@ import VisualMold from "../MoldeHV/VisualMold.jsx";
 import OrdAPiMold from "../Ordenes/OrdAPiMold.jsx";
 import CreateMechanical from "../FormNewMold/CreateMechanical.jsx";
 import CreateActivity from "../Activity/CreateActivity.jsx";
-
+import VisualGnrlv2 from "../VisualGnrl/VisualGnrlv2.jsx";
 
 
 const router = createBrowserRouter([
     {path: '/', element: <App />},
 
     {path: '/VisualGnrl', element: <VisualGnrl />},
+    {path: '/VisualGnrlv2', element: <VisualGnrlv2 />},
 
     {path: '/CreateGnrl', element: <CreateGnrl />},
     {path: '/CreateUbic', element: <CreateUbic />},

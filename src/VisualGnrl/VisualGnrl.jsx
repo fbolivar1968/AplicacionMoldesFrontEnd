@@ -9,39 +9,40 @@ import Pagination from '../Components/Pagination.jsx';
 import {Link} from "react-router-dom";
 import NavBar from "../Components/NavBar.jsx";
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import ImageModal from "../Components/ImageModal.jsx";
 
 const initialMoldes = [
     {
-        qr: "src/assets/qr-code.png",
-        id: 1,
-        name: "M-HX01",
-        image: "src/assets/MoldesImg/M-HX01.JPEG",
-        machine: "Ona",
-        state: "Taller",
+        qr: "src/assets/MoldesImg/QR292.png",
+        id: 292,
+        name: "MES-NZ05",
+        image: "src/assets/MoldesImg/292.jpg",
+        machine: "25",
+        state: "Incompleto",
     },
     {
-        qr: "src/assets/qr-code.png",
-        id: 2,
-        name: "M-HX02",
-        image: "src/assets/MoldesImg/M-HX02.JPEG",
-        machine: "24",
-        state: "Taller",
+        qr: "src/assets/MoldesImg/QR420.png",
+        id: 373,
+        name: "MRG-GT08",
+        image: "src/assets/MoldesImg/373.jpg",
+        machine: "28",
+        state: "Disponible",
     },
     {
-        qr: "src/assets/qr-code.png",
-        id: 3,
-        name: "M-HX03",
-        image: "src/assets/MoldesImg/M-HX03.JPEG",
-        machine: "16",
-        state: "Taller",
+        qr: "src/assets/MoldesImg/QR420.png",
+        id: 420,
+        name: "MES-RE19",
+        image: "src/assets/MoldesImg/420.jpg",
+        machine: "28",
+        state: "Disponible",
     },
     {
-        qr: "src/assets/qr-code.png",
-        id: 4,
-        name: "M-HX05",
-        image: "src/assets/MoldesImg/M-HX05.JPEG",
-        machine: "22",
-        state: "Taller",
+        qr: "src/assets/MoldesImg/QR255.png",
+        id: 255,
+        name: "MES-CL03",
+        image: "src/assets/MoldesImg/255.jpg",
+        machine: "25",
+        state: "Por reparar",
 
     },
 ]
@@ -70,11 +71,11 @@ function MoldesList() {
     return (
 
         <ul>{initialMoldes.map((molde) => (
-            <Link to="/VisualMold" state={{id: molde.id}}>
-                <Molde
-                    key={molde.id}
-                    molde={molde}/>
-            </Link>
+
+            <Molde
+                key={molde.id}
+                molde={molde}/>
+
         ))}</ul>
     );
 }
@@ -87,24 +88,34 @@ function Molde({molde}) {
                 src={molde.image}
                 sx={{width: 100, height: 100}}
                 variant="rounded"
-                className="col-start-1 row-span-2"
+                className="col-start-1 row-span-3"
 
             />
 
-            <div className="justify-self-end col-start-2 row-span-2 p-2 bg-blue-50">
-                <Avatar
-                    alt={molde.name}
+            <div className="justify-self-end col-start-2 row-span-3 p-2 bg-blue-50 overflow-hidden">
+                <ImageModal
                     src={molde.qr}
-                    sx={{width: 100, height: 100}}
-                    variant="square"
+                    alt={molde.name}
                 />
+
+
+                {/*<Avatar*/}
+                {/*    alt={molde.name}*/}
+                {/*    src={molde.qr}*/}
+                {/*    sx={{width: 100, height: 100}}*/}
+                {/*    variant="square"*/}
+                {/*    className="transition-transform duration-300 ease-in-out transform origin-top hover:scale-200"*/}
+                {/*/>*/}
             </div>
 
-            <h3 className="col-start-3 row-start-1 justify-self-start bg-blue-50">{molde.name}</h3>
-            <p className="col-start-3 row-start-2 row-end-3 justify-self-start bg-blue-50">Máquina: {molde.machine} </p>
+            <Link to="/VisualMold" className="col-start-3 row-start-1 justify-self-start">
+                <h3> {molde.name}</h3>
+            </Link>
+            <p className="col-start-3 row-start-2 justify-self-start bg-blue-50">Estado: {molde.state} </p>
+            <p className="col-start-3 row-start-3 justify-self-start bg-blue-50">Máquina: {molde.machine} </p>
 
-            <div className="col-start-5 row-span-2 m-2 bg-blue-50">
-                <Link to="/CreateActivity" >
+            <div className="col-start-5 row-span-3 m-2 bg-blue-50">
+                <Link to="/CreateActivity">
                     <ChecklistIcon/>
                 </Link>
 

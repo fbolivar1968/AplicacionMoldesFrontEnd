@@ -11,7 +11,6 @@ import {FETCH_STATUS} from "./FetchStatus.js";
 
     const axiosInstance = axios.create({
         baseURL: "http://10.1.1.14:8000"
-        //10.1.2.14/api https://jsonplaceholder.typicode.com
     });
 
     axiosInstance.interceptors.request.use(
@@ -37,6 +36,33 @@ import {FETCH_STATUS} from "./FetchStatus.js";
                 controllerRef.current?.abort();
             };
         }, []);
+
+        const CreatePost = async (url, data) => {
+            setLoading(true);
+            setError("");
+            try {
+                const result = await axiosInstance.post(url, data);
+                setResponse(result.data);
+            } catch (error) {
+                setError(error.response ? error.response.data : error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        const updatePost = async (url, data) => {
+            setLoading(true);
+            setError("");
+            try {
+                const result = await axiosInstance.put(url, data);
+                setResponse(result.data);
+            } catch (error) {
+                setError(error.response ? error.response.data : error.message);
+            } finally {
+                setLoading(false);
+            }
+
+        }
 
        const fetchData = async ({url, method, data = {}, params= {}}) => {
         setStatus(FETCH_STATUS.LOADING);
@@ -83,6 +109,8 @@ import {FETCH_STATUS} from "./FetchStatus.js";
         error,
         status,
         fetchData,
+        CreatePost,
+        updatePost,
     }
 
 

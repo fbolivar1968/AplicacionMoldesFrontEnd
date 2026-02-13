@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 
 export default function VisualMold() {
-    const moldeID = "MHX01";
+    const moldeID = "MES-RE19";
     return (
         <>
         <NavBar/>
@@ -18,7 +18,7 @@ export default function VisualMold() {
                 <h1>Hoja de vida molde {moldeID}</h1>
                 <Avatar
                     alt={moldeID}
-                    src="src/assets/MoldesImg/M-HX01.jpeg"
+                    src="src/assets/MoldesImg/420.jpg"
                     sx={{width: 300, height: 500}}
                     variant="rounded"
                     className="col-start-1 row-start-1"
@@ -50,7 +50,7 @@ export default function VisualMold() {
                 <div className="col-span-2 row-start-1 flex flex-row items-center self-center">
                     <Avatar
                         alt={moldeID}
-                        src="src/assets/MoldesImg/qr-code.png"
+                        src="src/assets/MoldesImg/QR420.png"
                         sx={{width: 80, height: 80}}
                         variant="rounded"
                         className=""
@@ -89,7 +89,7 @@ export default function VisualMold() {
 
         <div className="col-start-2 row-start-2 justify-items-center">
             <h3>Esquema Familia Hex</h3>
-            <img className="col-start-1 row-start-2" alt="esquema" src="src/assets/Squemas/SquemaBristol.png"/>
+            <img className="col-start-1 row-start-2" alt="esquema" src="../assets/Schemas/SquemaBristol.png"/>
 
 
 

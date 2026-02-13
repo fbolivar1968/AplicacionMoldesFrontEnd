@@ -5,14 +5,14 @@ import {Link} from "react-router-dom";
 import CreateMeasures from "./CreateMeasures.jsx";
 import NavBar from "../Components/NavBar.jsx";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
-import {useEffect} from "react";
-import axios from "axios";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import QRCode from "react-qr-code";
+
 
 
 export default function CreateGnrl() {
 
+    const [Altern, setAltern] = useState(" ");
     //Handle state for Herramental
     const [Herramental, setHerramental] = useState(" ");
     const [CHerramental, setCHerramental] = useState("");
@@ -20,7 +20,7 @@ export default function CreateGnrl() {
     const handleHerramentalChange = (e) => {
         const selectedId = e.target.value;
 
-
+//-----------Description builder---------------------------------------
         const selectedItem = herramentales.find(item => item.id === parseInt(selectedId));
 
         if (selectedItem) {
@@ -28,7 +28,7 @@ export default function CreateGnrl() {
             setCHerramental(selectedItem.codigo); // Store the 'ES', 'RG', etc.
         }
     };
-
+//----------------------------------------------------------------------
     // Handle state for TipoHerramental
     const [TipoHerramental, setTipo] = useState(" ");
     const [CTipoHerramental, setCTipo] = useState("");
@@ -63,14 +63,13 @@ export default function CreateGnrl() {
     };
 
 
-    const [Altern, setAltern] = useState(" ");
+    //---------------Fetch data from endpoint ---------------------------
     const {response, error, loading, fetchData} = useAxios();
     const urls = [
         "/api/tipo_herramental/",
         "/api/familia/",
         "api/herramental/"
     ];
-
 
     useEffect(() => {
         fetchData({
@@ -87,11 +86,14 @@ export default function CreateGnrl() {
         const fullDesc = `Herramental ${Herramental} tipo ${TipoHerramental} de la Familia ${Familia} con código alterno ${Altern}`;
         setDescription(fullDesc);
     }, [Herramental, TipoHerramental, Familia, Altern]);
-    //-----------------------------------------------------------------0
+
+    //--------------------Debugging from console-------------------------------------
+
     console.log("RESPONSE", response);
 
     console.log("RESPONSE TYPE", typeof response);
     console.log("IS ARRAY?", Array.isArray(response));
+// ----------------------------------------------------------------------------------
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -163,7 +165,7 @@ export default function CreateGnrl() {
                     <button className="btn btn-orange col-start-1 row-start-2">Atrás</button>
                 </Link>
                 <Link to="/CreateMeasures">
-                    <button
+                    <button onClick={CreatePost("api/herramental_esp",data)}
                         className="btn btn-orange grid-col-2 row-start-2 sm:col-start-2 flex justify-end">Continuar
                     </button>
                 </Link>

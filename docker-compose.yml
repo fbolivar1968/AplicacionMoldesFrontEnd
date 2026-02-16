@@ -1,0 +1,10 @@
+#version: "3.9"
+services:
+  landing:
+    image: nginx:alpine
+    container_name: Redinnova_Portal
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro   # Monta la carpeta dist/ en Nginx
+    ports:
+      - "5173:80"   # Acceso en http://<IP_SERVIDOR>:5175
+    restart: unless-stopped

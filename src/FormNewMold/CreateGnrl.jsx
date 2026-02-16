@@ -7,10 +7,17 @@ import NavBar from "../Components/NavBar.jsx";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
 import {useEffect, useState} from "react";
 import QRCode from "react-qr-code";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+
+const
 
 
 
 export default function CreateGnrl() {
+    const{
+
+    }= useForm();
 
     const [Altern, setAltern] = useState(" ");
     //Handle state for Herramental
@@ -64,7 +71,7 @@ export default function CreateGnrl() {
 
 
     //---------------Fetch data from endpoint ---------------------------
-    const {response, error, loading, fetchData} = useAxios();
+    const {response, error, loading, fetchData, CreatePost} = useAxios();
     const urls = [
         "/api/tipo_herramental/",
         "/api/familia/",
@@ -97,11 +104,24 @@ export default function CreateGnrl() {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
+
+//------------------------------Post-----------------------------------------------------
+
+    useEffect(() => {
+        CreatePost({
+            url: "api/post",
+            method: "POST",
+        });
+    }, []);
+    const [formHerr, setFormHerr] = useState("")
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    }
     return (
         <>
             <NavBar/>
             <h1> Información General</h1>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full m-5">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full m-5">
                 <div>
                     <div>
                         <label className="block p-2">Tipo Herramental</label>

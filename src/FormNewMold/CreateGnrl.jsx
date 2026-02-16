@@ -10,14 +10,8 @@ import QRCode from "react-qr-code";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 
-const
-
-
 
 export default function CreateGnrl() {
-    const{
-
-    }= useForm();
 
     const [Altern, setAltern] = useState(" ");
     //Handle state for Herramental

@@ -277,7 +277,7 @@ function ProgressBar() {
                     letterSpacing: "0.1em",
                 }}
             >
-                <span>FORGE PROGRESS</span>
+                <span>PROCESO DE FORJADO</span>
                 <span style={{ color: "#ff8800" }}>{Math.floor(progress)}%</span>
             </div>
             <div
@@ -562,13 +562,14 @@ export default function UnderConstruction() {
 
                     {/* Body copy */}
                     <div className="sub-copy" style={{ color: "#888", fontSize: 13, lineHeight: 1.9 }}>
-                        Something exceptional is taking shape in the furnace.
-                        Our craftsmen are hammering every detail into place — welding
-                        performance with precision, tempering design with purpose.
+                        Aquí no se construye al azar. Se forja con intención.
+                        Cada proceso se ajusta.
+                        Cada dato se valida.
+                        Cada mejora se integra.
                         <br />
                         <br />
                         <span style={{ color: "#aaa" }}>
-              The forge doesn't rush. Neither do we.
+              Trabajando por una Transformación Digital basada en disciplina, precisión y evolución constante.
             </span>
                     </div>
 

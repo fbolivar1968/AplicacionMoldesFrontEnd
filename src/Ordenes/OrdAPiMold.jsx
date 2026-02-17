@@ -47,7 +47,7 @@ export default function Orders() {
             accessorKey: 'estado_op',
         },
         {
-            header: 'Ord. Producción',
+            header: 'Cons. OP',
             accessorKey: 'consecutivo_op',
         },
         {

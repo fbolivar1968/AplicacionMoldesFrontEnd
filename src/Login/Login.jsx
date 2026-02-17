@@ -1,6 +1,6 @@
 import {use, useState} from "react";
 import '../styles/globals.css'
-import styles from './Login.module.css'; // Import as an objectss
+import styles from './Login.module.css';
 import Logo from "../assets/MoldesImg/Logo.png";
 import { Link } from 'react-router-dom';
 import * as React from "react";

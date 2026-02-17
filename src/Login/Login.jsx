@@ -24,10 +24,10 @@ export default function Login(){
                     <section className ={styles.img_forjadora} >
                         <div className="m:rounded-bl-2xl md:rounded-tl-2xl md:block hidden">
                             <div className={styles.title_description}>
-                                <h3>Bienvenido a GMFB</h3>
+                                <h3>Bienvenido a GHFB</h3>
                             </div>
                             <div className={styles.text_description}>
-                                <p>Gestiona el inventario de los moldes, ubícalos y realiza prestamos</p>
+                                <p>Gestiona el inventario de los herramentales, ubícalos y realiza prestamos</p>
                             </div>
                         </div>
 

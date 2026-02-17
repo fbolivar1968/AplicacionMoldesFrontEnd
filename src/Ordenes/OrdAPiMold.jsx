@@ -128,14 +128,14 @@ export default function Orders() {
 
 
                 <table
-                    className="w-full table-fixed border-spacing-2 md:border-spacing-4 border-bg-blueFB bg-bg-blueFB">
+                    className="w-full table-fixed border-spacing-2 md:border-spacing-4 border-bg-blueFB bg-white">
                     <thead className="bg-white border-b-2 border-light-greyFB">
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map(header => (
                                 <th key={header.id}
                                     onClick={header.column.getToggleSortingHandler()}
-                                    className="p-3 text-sm text-blueFB font-bold tracking-wide text-left">
+                                    className="p-3 text-sm text-blueFB tracking-wide text-left">
 
                                     {
                                         flexRender(

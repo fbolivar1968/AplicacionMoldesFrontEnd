@@ -24,11 +24,11 @@ export default function Login(){
 
             <div className ="img_forjadora">
                 <div className="text_description" >
-                <h3>Bienvenido a GMFB</h3>
+                <h3>Bienvenido a GHFB</h3>
                 </div>
 
                 <div className="descripcion-gmfb">
-                <p>Gestiona el inventario de los moldes, ubícalos y realiza prestamos</p>
+                <p>Gestiona el inventario de los herramentales, ubícalos y realiza prestamos</p>
                 </div>
             </div>
         </form>

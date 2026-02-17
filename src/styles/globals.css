@@ -10,6 +10,7 @@
     --color-dark-greyFB: #4d4d4d;
     --color-light-greyFB: #C4C4C4;
     --color-hoverli: #E8EAF6;
+    --font-primary: "Poppins", sans-serif;
 
 }
 h1 {
@@ -184,6 +185,13 @@ select[multiple] {
     tr:nth-child(even) {
         @apply bg-blue-50;
     }
+
+    table{
+        @apply
+        font-primary
+    }
+
+
 
 
 }

@@ -10,7 +10,7 @@ export default function NavBar() {
     return (
         <nav className="flex justify-between w-full h-[10%] drop-shadow-md shadow-[4px] bg-[var(--color-blueFB)]">
             <ul className="flex items-center gap-6 text-white drop-shadow-md shadow-[4px] pl-1 m-1.5;">
-                <Link to={"/VisualGnrl"}>
+                <Link to={"/UnderConstruction"}>
                     <img className="max-w-1/30 mx-4  transition-all hidden sm:flex" src={logo} alt="logo"/>
                 </Link>
 
@@ -26,7 +26,7 @@ export default function NavBar() {
                 </Link>
             </ul>
             <ul className="flex justify-end p-1 gap-6 bg-blueFB hover:border-orangeFB text-white mr-6">
-                <Link to={"/VisualGnrl"}>
+                <Link to={"/UnderConstruction"}>
                     <li className=" border-t-blueFB ">
                         <Avatar sx={{width: 24, height: 24}}>K</Avatar>
                     </li>

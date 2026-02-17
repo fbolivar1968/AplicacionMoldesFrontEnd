@@ -1,5 +1,6 @@
 import * as React from "react";
 import FBIcon from "../assets/Icons/FBIcon.png";
+import '../styles/globals.css'
 
 export default function LoadingAnimation({message = ""}) {
     return (

@@ -57,7 +57,7 @@ export default function Login(){
                                    type="password" placeholder="Contraseña"   />
 
                         </div>
-                        <Link to="/VisualGnrl" className="flex justify-center gap-2 m-2">
+                        <Link to="/OrdAPiMold" className="flex justify-center gap-2 m-2">
                             <button className={styles.button_login} onClick={handleLogin}>Acceder</button>
                         </Link>
                     </div>

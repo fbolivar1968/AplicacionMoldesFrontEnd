@@ -179,7 +179,7 @@ export default function CreateGnrl() {
                     <button className="btn btn-orange col-start-1 row-start-2">Atrás</button>
                 </Link>
                 <Link to="/CreateMeasures">
-                    <button onClick={CreatePost("api/herramental_esp",data)}
+                    <button onClick={CreatePost("api/herramental_esp")}
                         className="btn btn-orange grid-col-2 row-start-2 sm:col-start-2 flex justify-end">Continuar
                     </button>
                 </Link>

@@ -15,10 +15,10 @@ export default function NavBar() {
                 </Link>
 
                 <Link
-                    to={"/VisualGnrl"}>
+                    to={"/UnderConstruction"}>
                     <li className="border-t-2 border-white py-0.5 hover:border-orangeFB"> Home</li>
                 </Link>
-                <Link to={"/CreateGnrl"}>
+                <Link to={"/UnderConstruction"}>
                     <li className="border-t-2 border-white py-0.5 hover:border-orangeFB">Moldes</li>
                 </Link>
                 <Link to={"/OrdAPiMold"}>

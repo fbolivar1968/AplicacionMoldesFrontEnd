@@ -2,9 +2,9 @@
 services:
   landing:
     image: nginx:alpine
-    container_name: Redinnova_Portal
+    container_name: FrontHerramental
     volumes:
       - ./dist:/usr/share/nginx/html:ro   # Monta la carpeta dist/ en Nginx
     ports:
-      - "5173:80"   # Acceso en http://<IP_SERVIDOR>:5175
+      - "5174:80"   # Acceso en http://<IP_SERVIDOR>:5174
     restart: unless-stopped

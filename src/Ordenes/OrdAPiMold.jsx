@@ -19,10 +19,16 @@ import {
 } from '@tanstack/react-table';
 
 
+import { useNavigate } from "react-router-dom";
+import apiClient from "../Hooks/useAxios/apiClient.ts";
+
+
 export default function Orders() {
+    const navigate = useNavigate();
     const { response, error, status, fetchData } = useAxios(); //Response stores the data fetched from API
     const [globalFilter, setGlobalFilter] = useState('');
-    const [sorting, setSorting] = useState([])
+    const [sorting, setSorting] = useState([]);
+    const [navigatingCode, setNavigatingCode] = useState(null);
     const isLoading = status === FETCH_STATUS.LOADING;
 
     useEffect(() => {
@@ -32,11 +38,56 @@ export default function Orders() {
         });
     }, []);
 
+    // Function to recover herramental_especifico ID from hesp_CodigoHerramental
+    const handleHerramentalClick = async (codigoHerramental) => {
+        if (!codigoHerramental) return;
+        setNavigatingCode(codigoHerramental);
+        try {
+            const res = await apiClient.get('/api/herramental_especifico/', {
+                params: { hesp_CodigoHerramental: codigoHerramental }
+            });
+            const data = res.data;
+            const list = Array.isArray(data) ? data : (data?.results || (data ? [data] : []));
+            const match = list.find(item =>
+                item?.hesp_CodigoHerramental === codigoHerramental ||
+                item?.codigo_herramental === codigoHerramental
+            ) || list[0];
+
+            const targetId = match?.hesp_IdHerramentalEspecifico || match?.id;
+
+            if (targetId) {
+                navigate(`/VisualMold/${targetId}`);
+            } else {
+                alert(`No se encontró el herramental con código "${codigoHerramental}".`);
+            }
+        } catch (err) {
+            console.error("Error al buscar herramental:", err);
+            alert(`Error al buscar el herramental "${codigoHerramental}".`);
+        } finally {
+            setNavigatingCode(null);
+        }
+    };
+
     //Define (Memoizing)Columns
     const columns = useMemo(() => [
         {
             header: 'Cód. Herramental',
             accessorKey: 'codigo_herramental',
+            cell: ({ getValue }) => {
+                const code = getValue();
+                if (!code) return '-';
+                const isNavigating = navigatingCode === code;
+                return (
+                    <button
+                        onClick={() => handleHerramentalClick(code)}
+                        disabled={isNavigating}
+                        className="text-blueFB hover:underline font-semibold cursor-pointer text-left focus:outline-none disabled:opacity-50"
+                        title={`Ver molde ${code}`}
+                    >
+                        {isNavigating ? `${code}...` : code}
+                    </button>
+                );
+            }
         },
         {
             header: 'Núm. Pedido',
@@ -66,7 +117,7 @@ export default function Orders() {
             header: 'Comentario',
             accessorKey: 'comentario',
         },
-    ], []);
+    ], [navigatingCode]);
 
     //DEBUGGING
     fetch('http://10.1.1.14:8000/api/ordenes-produccion-forja')

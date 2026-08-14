@@ -187,14 +187,31 @@ export function CreateUbic() {
                 }
             }
 
-            if (!ubicacionId) {
-                throw new Error("Can't get IdUbicacionHerr");
+            let propiedadHerramentalId = formData?.hesp_IdPropiedadHerramental;
+
+            // Fallback: If hesp_IdPropiedadHerramental wasn't created in step 3, attempt creation now
+            if (!propiedadHerramentalId && formData?.ac_IdAcero) {
+                try {
+                    const propPayload = {
+                        ac_IdAcero: formData.ac_IdAcero,
+                        du_IdDureza: formData.du_IdDureza,
+                        pr_IdProveedor: formData.pr_IdProveedor,
+                        php_PrecioTotal: formData.php_PrecioTotal ? Number(formData.php_PrecioTotal) : null,
+                        ph_FechaCreacion: formData.ph_FechaCreacion || new Date().toISOString().split('T')[0],
+                        ph_DescripHerra: formData.ph_DescripHerra || "",
+                    };
+                    const resProp = await CreatePost("/api/propiedad_herramental/", "POST", propPayload);
+                    propiedadHerramentalId = resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental;
+                } catch (errProp) {
+                    console.warn("Could not create PropiedadHerramental on final submit:", errProp);
+                }
             }
 
             const finalData = {
                 ...formData,
                 ...data,
                 hesp_IdUbicacionHerr: ubicacionId,
+                ...(propiedadHerramentalId ? { hesp_IdPropiedadHerramental: propiedadHerramentalId } : {})
             };
 
             updateFormData(data);

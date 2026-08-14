@@ -17,7 +17,7 @@ export const HerramentalModelSchema = z.object({
     hesp_CantPieza: z.number().int().min(7).max(4).optional(),
     hesp_Observacion: z.string().min(0).max(100).nullable(),
     hesp_IdImagen: z.number().int().nullable().optional(), // Define que es un entero
-
+    hesp_Criticidad: z.string().max(20).nullable(),
 
     // Specific technical attributes
     hesp_NumNariz: z.number().int().max(255).nullable(),

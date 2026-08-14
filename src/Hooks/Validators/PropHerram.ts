@@ -49,3 +49,14 @@ export const HerramentalAceroSchema = z.object({
 });
 
 export type HerramentalAcero = z.infer<typeof HerramentalAceroSchema>;
+
+export const MechanicalFormSchema = z.object({
+    ac_IdAcero: z.coerce.number().min(1, "Debe seleccionar un acero"),
+    du_IdDureza: z.coerce.number().min(1, "Debe seleccionar una dureza"),
+    pr_IdProveedor: z.coerce.number().min(1, "Debe seleccionar un proveedor"),
+    php_PrecioTotal: z.coerce.number().min(0, "El precio debe ser mayor o igual a 0").optional().or(z.literal("")),
+    ph_FechaCreacion: z.string().optional(),
+    ph_DescripHerra: z.string().max(500, "Máximo 500 caracteres").optional(),
+});
+
+export type MechanicalFormValues = z.infer<typeof MechanicalFormSchema>;

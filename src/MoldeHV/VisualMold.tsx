@@ -97,7 +97,7 @@ export default function VisualMold() {
                             <div className="p-3 space-y-1">
                                 <p><strong>Máquinas compatibles</strong></p>
                                 <p><strong>N° Maq. Principal:</strong> {toolData.nombre_maquina_pp}</p>
-                                <p><strong>N° Maq. Opcional:</strong> {toolData.nombre_maquina_opc}</p>
+                                <p><strong>N° Maq. Opcional:</strong> {toolData.nombre_maquina_opc || "Sin Maq. Opcional"} </p>
                                 <p><strong>Die-Set:</strong> {toolData.codigo_dieset}</p>
                             </div>
                         </div>
@@ -199,9 +199,9 @@ export default function VisualMold() {
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold">Fecha de elaboración:</p>
-                                        <p>No registrada</p>
+                                        <p>{toolData.fecha_creacion || "Sin datos"}</p>
                                         <p className="text-xs font-bold mt-1">Material:</p>
-                                        <p>No registrado</p>
+                                        <p>{toolData.nombre_acero || "Sin datos"}</p>
                                     </div>
                                 </div>
 
@@ -210,9 +210,21 @@ export default function VisualMold() {
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.5-7 3 10 13 11 13 11z"></path></svg>
                                     </div>
                                     <div>
+                                        <p className="text-xs font-bold text-gray-300">Acero:</p>
+                                        <div className="mt-2 space-y-2">
+                                            <p className="text-xs">{toolData.nombre_acero || "Sin datos"}</p>
+                                        </div>
+                                    </div>
+                                    <div>
                                         <p className="text-xs font-bold text-gray-300">Dureza:</p>
-                                        <div className="mt-2 space-y-1">
-                                            <div className="h-2 w-24 bg-gray-500 rounded"></div>
+                                        <div className="mt-2 space-x-3">
+                                            <p className="text-xs">{toolData.nombre_dureza || "Sin datos"}</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-gray-300">Proveedor:</p>
+                                        <div className="mt-2 space-y-5">
+                                            <p className="text-xs">{toolData.nombre_proveedor || "Sin datos"}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -220,7 +232,7 @@ export default function VisualMold() {
                                 <div className="mt-10">
                                     <h4 className="text-sm font-bold border-b border-gray-500 pb-1 mb-2">Observaciones:</h4>
                                     <p className="text-xs leading-relaxed italic">
-                                        {toolData.hesp_Observacion || "Sin observaciones adicionales registradas en el sistema."}
+                                        {toolData.descripcion_herra || "Sin observaciones adicionales registradas en el sistema."}
                                     </p>
                                 </div>
                             </div>

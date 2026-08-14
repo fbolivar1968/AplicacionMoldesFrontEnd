@@ -29,6 +29,7 @@ const HerramentalValuesSchema = HerramentalModelSchema.pick(
         fa_NombreFamilia: true,
         //fa_IdFamilia: true,
         fa_CodigoFamilia: true,
+        hesp_Criticidad: true,
     }
 )
 
@@ -70,6 +71,7 @@ export default function CreateGnrlv1() {
             hesp_IdTipoHerramental: formData.hesp_IdTipoHerramental ?? 0,
             fa_NombreFamilia: formData.fa_NombreFamilia ?? "",
             fa_CodigoFamilia: formData.fa_CodigoFamilia ?? "",
+            hesp_Criticidad: formData.hesp_Criticidad ?? "",
         }
     });
 
@@ -181,6 +183,7 @@ export default function CreateGnrlv1() {
     //Sync HerramentalCode whenever hesp_CodigoAlterno changes
     useEffect(() => {
         setValue("hesp_CodigoHerramental", HerramentalCode);
+        console.log("Herramental Code", HerramentalCode)
     }, [HerramentalCode]);
 
     //Sync HerramentalCode whenever hesp_CodigoAlterno changes
@@ -271,7 +274,23 @@ export default function CreateGnrlv1() {
                         {errors.hesp_CodigoAlterno && <p className="text-red-500 text-sm">{errors.hesp_CodigoAlterno.message}</p>}
 
                     </div>
+
+                    <div>
+                        <label className="block p-2" htmlFor={" Criticidad"}> Criticidad</label>
+                        <select
+                            {...register("hesp_Criticidad")}
+                            className="w-full p-2 border"
+                        >
+                            <option disabled value="">Seleccione Criticidad</option>
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                        {errors.hesp_Criticidad && <p className="text-red-500 text-sm">{errors.hesp_Criticidad.message}</p>}
+
+                    </div>
                 </div>
+
 
                 <div className="bg-gray-50 p-6 rounded-lg">
                     <h3 className="font-bold"> Descripción</h3>

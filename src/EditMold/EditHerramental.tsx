@@ -22,6 +22,7 @@ const EditHerramentalSchema = z.object({
     hesp_Descripcion1: z.string().optional(),
     consecutive: z.coerce.number().optional(),
     hesp_IdImagen: z.coerce.number().int().nullable().optional(),
+    hesp_IdPropiedadHerramental: z.coerce.number().int().nullable().optional(),
 
     // Measures
     hesp_A: z.coerce.number().nullable().optional(),
@@ -51,6 +52,14 @@ const EditHerramentalSchema = z.object({
     hesp_IdEstadoHerr: z.coerce.number().int().min(1, "Requerido"),
     hesp_IdActividad: z.coerce.number().int().nullable().optional(),
     hesp_CantHerramental: z.coerce.number().int().min(1, "Requerido"),
+
+    // Propiedades mecánicas
+    ac_IdAcero: z.coerce.number().int().optional(),
+    du_IdDureza: z.coerce.number().int().optional(),
+    pr_IdProveedor: z.coerce.number().int().optional(),
+    php_PrecioTotal: z.coerce.number().nullable().optional().or(z.literal("")),
+    ph_FechaCreacion: z.string().optional(),
+    ph_DescripHerra: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof EditHerramentalSchema>;
@@ -72,7 +81,10 @@ export default function EditHerramental() {
         estanterias: [],
         pisos: [],
         estados: [],
-        diesets: []
+        diesets: [],
+        aceros: [],
+        durezas: [],
+        proveedores: []
     });
 
     const { register, handleSubmit, reset, watch, setValue, formState: { errors, isDirty } } = useForm<FormValues>({
@@ -103,6 +115,13 @@ export default function EditHerramental() {
             hesp_IdActividad: null,
             hesp_CantHerramental: 1,
             hesp_IdImagen: null,
+            hesp_IdPropiedadHerramental: null,
+            ac_IdAcero: 0,
+            du_IdDureza: 0,
+            pr_IdProveedor: 0,
+            php_PrecioTotal: "",
+            ph_FechaCreacion: "",
+            ph_DescripHerra: "",
         }
     });
 
@@ -131,7 +150,8 @@ export default function EditHerramental() {
                 "/api/estanterias/",
                 "/api/pisos/",
                 "/api/estado_herramental/",
-                "/api/diesets/"
+                "/api/diesets/",
+                "/api/propiedades-herramental/",
             ];
             const results = await fetchData({ url: urls });
             if (results && Array.isArray(results)) {
@@ -145,7 +165,8 @@ export default function EditHerramental() {
                     estRes,
                     pisRes,
                     estdRes,
-                    dieRes
+                    dieRes,
+                    propRes
                 ] = results;
 
                 const getData = (res: any) => {
@@ -164,16 +185,26 @@ export default function EditHerramental() {
                     estanterias: getData(estRes),
                     pisos: getData(pisRes),
                     estados: getData(estdRes),
-                    diesets: getData(dieRes)
+                    diesets: getData(dieRes),
+                    aceros: propRes?.aceros || [],
+                    durezas: propRes?.durezas || [],
+                    proveedores: propRes?.proveedores || [],
                 });
 
                 if (toolRes) {
                     setGeneralData(toolRes);
+                    const propData = toolRes.propiedad_herramental || {};
                     const mappedData = {
                         ...toolRes,
                         uh_NumeroFila: toolRes.numero_fila ?? toolRes.uh_NumeroFila ?? 0,
                         uh_NumeroColumna: toolRes.numero_columna ?? toolRes.uh_NumeroColumna ?? 0,
                         uh_NumeroPosicion: toolRes.numero_posicion ?? toolRes.uh_NumeroPosicion ?? 0,
+                        ac_IdAcero: propData.ac_IdAcero ?? toolRes.ac_IdAcero ?? 0,
+                        du_IdDureza: propData.du_IdDureza ?? toolRes.du_IdDureza ?? 0,
+                        pr_IdProveedor: propData.pr_IdProveedor ?? toolRes.pr_IdProveedor ?? 0,
+                        php_PrecioTotal: propData.php_PrecioTotal ?? toolRes.php_PrecioTotal ?? "",
+                        ph_FechaCreacion: propData.ph_FechaCreacion ?? toolRes.ph_FechaCreacion ?? "",
+                        ph_DescripHerra: propData.ph_DescripHerra ?? toolRes.ph_DescripHerra ?? "",
                     };
                     reset(mappedData);
                 }
@@ -203,7 +234,7 @@ export default function EditHerramental() {
         }
     }, [hesp_IdFamilia, dropdowns.familias, setValue]);
 
-    // Memoize the description
+    // Memoize description
     const description = useMemo(() => {
         const hName = dropdowns.herramentales?.find(
             (i: any) => i.he_IdHerramental === Number(hesp_IdHerramental)
@@ -228,63 +259,9 @@ export default function EditHerramental() {
         dropdowns.familias,
     ]);
 
-    // Prefix CodeBase Generator
-    const baseCodePrefix = useMemo(() => {
-        const hCode = dropdowns.herramentales?.find((i: any) => i.he_IdHerramental === Number(hesp_IdHerramental))?.he_CodigoHerramental || "";
-        const tCode = dropdowns.tipo_herramental?.find((i: any) => i.th_IdTipoHerramental === Number(hesp_IdTipoHerramental))?.th_CodigoTipoHerramental || "";
-        const fCode = dropdowns.familias?.find((i: any) => i.fa_IdFamilia === Number(hesp_IdFamilia))?.fa_CodigoFamilia || "";
-        return `${hCode}${tCode}-${fCode}`;
-    }, [hesp_IdHerramental, hesp_IdTipoHerramental, hesp_IdFamilia, dropdowns.herramentales, dropdowns.tipo_herramental, dropdowns.familias]);
-
-    const consecutiveCode = String(consecutive || "").padStart(2, "0");
-    const HerramentalCode = `${baseCodePrefix}${consecutiveCode}`;
-
-    // Sync HerramentalCode and Description
-    // (Disabled code regeneration logic as editing the code is disabled)
-    /*
-    useEffect(() => {
-        if (HerramentalCode && HerramentalCode !== "00") {
-            setValue("hesp_CodigoHerramental", HerramentalCode);
-        }
-    }, [HerramentalCode, setValue]);
-    */
-
     useEffect(() => {
         setValue("hesp_Descripcion1", description);
     }, [description, setValue]);
-
-    // Fetch next consecutive if categories change
-    // (Disabled as categories are now disabled in edit view)
-    /*
-    useEffect(() => {
-        if (hesp_IdHerramental && hesp_IdTipoHerramental && hesp_IdFamilia) {
-            // If it matches the original data, keep the original consecutive
-            if (generalData &&
-                Number(hesp_IdHerramental) === Number(generalData.hesp_IdHerramental) &&
-                Number(hesp_IdTipoHerramental) === Number(generalData.hesp_IdTipoHerramental) &&
-                Number(hesp_IdFamilia) === Number(generalData.hesp_IdFamilia)) {
-                setValue("consecutive", generalData.consecutive);
-                return;
-            }
-
-            const fetchNext = async () => {
-                const res = await fetchData({
-                    url: `/api/herramental/next-consecutive`,
-                    method: "GET",
-                    params: {
-                        h: hesp_IdHerramental,
-                        t: hesp_IdTipoHerramental,
-                        f: hesp_IdFamilia
-                    }
-                });
-                if (res && res.nextValue !== undefined) {
-                    setValue("consecutive", res.nextValue);
-                }
-            };
-            fetchNext();
-        }
-    }, [hesp_IdHerramental, hesp_IdTipoHerramental, hesp_IdFamilia, generalData, fetchData, setValue]);
-    */
 
     // Dynamic Measures Scheme Information
     const familyCode = watched.fa_CodigoFamilia || 'nan';
@@ -296,7 +273,7 @@ export default function EditHerramental() {
 
     const onSubmit = async (data: FormValues) => {
         try {
-            // First create/find the Ubicacion relation record
+            // 1. Create or Find Ubicacion
             const ubicacionData = {
                 uh_NumeroFila: data.uh_NumeroFila,
                 uh_NumeroColumna: data.uh_NumeroColumna,
@@ -345,10 +322,35 @@ export default function EditHerramental() {
                 throw new Error("No se pudo obtener el ID de la ubicación");
             }
 
-            // Prepare the patch data for the specific tool
+            // 2. Create or Update Mechanical Properties
+            let propiedadId = data.hesp_IdPropiedadHerramental;
+            if (data.ac_IdAcero || data.du_IdDureza || data.pr_IdProveedor || data.ph_DescripHerra) {
+                const mechanicalPayload = {
+                    ac_IdAcero: data.ac_IdAcero ? Number(data.ac_IdAcero) : null,
+                    du_IdDureza: data.du_IdDureza ? Number(data.du_IdDureza) : null,
+                    pr_IdProveedor: data.pr_IdProveedor ? Number(data.pr_IdProveedor) : null,
+                    php_PrecioTotal: data.php_PrecioTotal ? Number(data.php_PrecioTotal) : null,
+                    ph_FechaCreacion: data.ph_FechaCreacion || new Date().toISOString().split('T')[0],
+                    ph_DescripHerra: data.ph_DescripHerra || "",
+                };
+
+                try {
+                    if (propiedadId) {
+                        await CreatePost(`/api/propiedad_herramental/${propiedadId}/`, "PATCH", mechanicalPayload);
+                    } else {
+                        const resProp = await CreatePost("/api/propiedad_herramental/", "POST", mechanicalPayload);
+                        propiedadId = resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental;
+                    }
+                } catch (err) {
+                    console.error("Error guardando propiedades mecánicas:", err);
+                }
+            }
+
+            // 3. Prepare patch data for specific tool
             const finalData = {
                 ...data,
                 hesp_IdUbicacionHerr: ubicacionId,
+                hesp_IdPropiedadHerramental: propiedadId || null,
             };
 
             await CreatePost(`/api/herramental_especifico/${id}/`, "PATCH", finalData);
@@ -417,11 +419,6 @@ export default function EditHerramental() {
                                 {errors.hesp_CodigoAlterno && <p className="text-red-500 text-sm">{errors.hesp_CodigoAlterno.message}</p>}
                             </div>
                         </div>
-
-                        {/*  <div className="mt-6 p-4 bg-white rounded border">
-                            <span className="text-gray-500 font-bold block text-sm">Código Estándar Generado:</span>
-                            <span className="text-2xl font-mono text-blue-700 font-bold">{HerramentalCode}</span>
-                        </div>*/}
                     </div>
 
                     {/* SECTION 2: IMAGE */}
@@ -449,11 +446,8 @@ export default function EditHerramental() {
                         </div>
                     </div>
 
-
-
                     {/* SECTION 3: Dynamic Technical Measures */}
                     <div className="bg-gray-50 p-6 rounded-lg border">
-
                         <h2 className="text-xl font-bold mb-4">Medidas Técnicas (Familia: {familyName})</h2>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -487,8 +481,6 @@ export default function EditHerramental() {
                                 />
                             </div>
                         )}
-
-
                     </div>
 
                     {/* SECTION 4: Location and Status */}
@@ -609,6 +601,83 @@ export default function EditHerramental() {
                         </div>
                     </div>
 
+                    {/* SECTION 5: Mechanical Properties */}
+                    <div className="bg-gray-50 p-6 rounded-lg border">
+                        <h2 className="text-xl font-bold mb-4">Propiedades Mecánicas</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <label className="block p-2 font-bold">Acero</label>
+                                <select {...register("ac_IdAcero")} className="w-full p-2 border rounded bg-white">
+                                    <option value={0}>Seleccione Acero</option>
+                                    {dropdowns.aceros?.map((acero: any, idx: number) => (
+                                        <option value={acero.ac_IdAcero ?? idx} key={acero.ac_IdAcero ?? idx}>
+                                            {acero.ac_DescripAcero}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.ac_IdAcero && <p className="text-red-500 text-sm">{errors.ac_IdAcero.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block p-2 font-bold">Dureza</label>
+                                <select {...register("du_IdDureza")} className="w-full p-2 border rounded bg-white">
+                                    <option value={0}>Seleccione Dureza</option>
+                                    {dropdowns.durezas?.map((dureza: any, idx: number) => (
+                                        <option value={dureza.du_IdDureza ?? idx} key={dureza.du_IdDureza ?? idx}>
+                                            {dureza.du_ValorDureza}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.du_IdDureza && <p className="text-red-500 text-sm">{errors.du_IdDureza.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block p-2 font-bold">Proveedor</label>
+                                <select {...register("pr_IdProveedor")} className="w-full p-2 border rounded bg-white">
+                                    <option value={0}>Seleccione Proveedor</option>
+                                    {dropdowns.proveedores?.map((proveedor: any, idx: number) => (
+                                        <option value={proveedor.pr_IdProveedor ?? idx} key={proveedor.pr_IdProveedor ?? idx}>
+                                            {proveedor.pr_NombreProv}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.pr_IdProveedor && <p className="text-red-500 text-sm">{errors.pr_IdProveedor.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block p-2 font-bold">Precio Total</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="$Precio"
+                                    className="w-full p-2 border rounded bg-white"
+                                    {...register("php_PrecioTotal")}
+                                />
+                                {errors.php_PrecioTotal && <p className="text-red-500 text-sm">{errors.php_PrecioTotal.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block p-2 font-bold">Fecha de creación</label>
+                                <input
+                                    type="date"
+                                    className="w-full p-2 border rounded bg-white"
+                                    {...register("ph_FechaCreacion")}
+                                />
+                                {errors.ph_FechaCreacion && <p className="text-red-500 text-sm">{errors.ph_FechaCreacion.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block p-2 font-bold">Observaciones de Propiedad</label>
+                                <textarea
+                                    className="w-full p-2 border rounded bg-white"
+                                    placeholder="Observaciones de la propiedad..."
+                                    {...register("ph_DescripHerra")}
+                                />
+                                {errors.ph_DescripHerra && <p className="text-red-500 text-sm">{errors.ph_DescripHerra.message}</p>}
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Form Buttons */}
                     <div className="flex justify-between items-center pt-6 border-t">
                         <button
@@ -625,8 +694,8 @@ export default function EditHerramental() {
                             Guardar Cambios
                         </button>
                     </div>
-                </form >
-            </div >
+                </form>
+            </div>
         </>
     );
 }

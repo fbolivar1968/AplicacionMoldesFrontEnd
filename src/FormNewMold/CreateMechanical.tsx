@@ -1,145 +1,174 @@
 import * as React from "react";
 import NavBar from "../Components/NavBar.jsx";
-import { Link } from "react-router-dom";
-import '../styles/globals.css'
-import { PropiedadHerramentalSchema } from "../Hooks/Validators/PropHerram.js"
-import { useForm } from "react-hook-form"
-import { z } from "zod";
+import '../styles/globals.css';
+import { MechanicalFormSchema, type MechanicalFormValues } from "../Hooks/Validators/PropHerram.js";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { useEffect } from "react";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
 
-const PropiedadValuesSchema = PropiedadHerramentalSchema.pick(
-    [
-        "hesp_IdHerramental",
-        "hesp_IdProveedor",
-        "hesp_TratamientoTermico",
-        "hesp_Dureza",
-        "hesp_Precio",
-        "hesp_FechaCreacion",
-        "hesp_Observaciones"
-    ]
-)
-
-
 export default function CreateMechanical() {
-
     const { formData, updateFormData } = useFormData();
     const navigate = useNavigate();
-    const onNextPage = (data) => {
-        updateFormData(data); // Saves Page 2 data to Context + SessionStorage
-        navigate("/CreateUbic"); // Move to Page 2
-        //const finalData = { ...formData, ...data };
-        // console.log("Page 1, 2 y 3 Data:", finalData);
-    };
+    const { response, fetchData, CreatePost } = useAxios();
 
-    useEffect(
-        () => {
-            fetchData({
-                url: "/api/propiedades-herramental/",
-                method: "GET",
-            });
-        }, []);
+    useEffect(() => {
+        fetchData({
+            url: "/api/propiedades-herramental/",
+            method: "GET",
+        });
+    }, []);
+
+    const aceros = response?.aceros || [];
+    const durezas = response?.durezas || [];
+    const proveedores = response?.proveedores || [];
 
     const {
         register,
         handleSubmit,
-        formState: { errors } //review-----------------
-    } = useForm({
-        resolver: zodResolver(PropiedadValuesSchema),
+        formState: { errors }
+    } = useForm<MechanicalFormValues>({
+        resolver: zodResolver(MechanicalFormSchema) as unknown as import("react-hook-form").Resolver<MechanicalFormValues>,
         defaultValues: {
-            hesp_IdHerramental: formData.hesp_IdHerramental ?? 0,
-            hesp_IdProveedor: formData.hesp_IdProveedor ?? 0,
-            hesp_TratamientoTermico: formData.hesp_TratamientoTermico ?? "",
-            hesp_Dureza: formData.hesp_Dureza ?? "",
-            hesp_Precio: formData.hesp_Precio ?? "",
-            hesp_FechaCreacion: formData.hesp_FechaCreacion ?? "",
-            hesp_Observaciones: formData.hesp_Observaciones ?? ""
+            ac_IdAcero: formData.ac_IdAcero ?? 0,
+            du_IdDureza: formData.du_IdDureza ?? 0,
+            pr_IdProveedor: formData.pr_IdProveedor ?? 0,
+            php_PrecioTotal: formData.php_PrecioTotal ?? "",
+            ph_FechaCreacion: formData.ph_FechaCreacion ?? "",
+            ph_DescripHerra: formData.ph_DescripHerra ?? formData.hesp_Observaciones ?? ""
         }
-    })
+    });
+
+    const onNextPage = async (data: MechanicalFormValues) => {
+        try {
+            const payload = {
+                ac_IdAcero: data.ac_IdAcero,
+                du_IdDureza: data.du_IdDureza,
+                pr_IdProveedor: data.pr_IdProveedor,
+                php_PrecioTotal: data.php_PrecioTotal ? Number(data.php_PrecioTotal) : null,
+                ph_FechaCreacion: data.ph_FechaCreacion || new Date().toISOString().split('T')[0],
+                ph_DescripHerra: data.ph_DescripHerra || "",
+            };
+
+            let propiedadId = formData.hesp_IdPropiedadHerramental;
+            try {
+                const resProp = await CreatePost("/api/propiedad_herramental/", "POST", payload);
+                if (resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental) {
+                    propiedadId = resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental;
+                    console.log("Created PropiedadHerramental ID:", propiedadId);
+                }
+            } catch (err) {
+                console.warn("Backend endpoint /api/propiedad_herramental/ not reachable yet. Saving data to context:", err);
+            }
+
+            updateFormData({
+                ...data,
+                ...(propiedadId ? { hesp_IdPropiedadHerramental: propiedadId } : {})
+            });
+
+            navigate("/CreateUbic");
+        } catch (error) {
+            console.error("Error in mechanical step submission:", error);
+        }
+    };
 
     return (
-
         <>
             <NavBar />
             <h1>Propiedades mecánicas</h1>
-            <form onSubmit={handleSubmit(onNextPage, (errors) => console.log("Validation errors:", errors))} className="grid grid-cols-1 md: grid-cols-2 grid-rows-2 gap-6 max-w-full m-5" >
-                <div className="space-y-8">
-
-                    <div className="col-start-1 row-start-1">
-                        <div>
-                            <label className=" block p-2">Acero</label>
-                            <select {...register("hesp_IdAcero")}>
-                                <option value="" hidden>Acero</option>
-                                {aceros.map((acero, index) => (
-                                    <option value={acero.ac_IdAcero ?? index} key={acero.ac_IdAcero ?? index}>
-                                        {acero.ac_DescripcionAcero ?? ""}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className=" block p-2">Dureza</label>
-                            <select {...register("hesp_IdDureza")}>
-                                <option value="" hidden>Dureza</option>
-                                {durezas.map((dureza, index) => (
-                                    <option value={dureza.du_IdDureza ?? index} key={dureza.du_IdDureza ?? index}>
-                                        {dureza.du_ValorDureza ?? ""}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className=" block p-2">Proveedor</label>
-                            <select {...register("hesp_IdProveedor")}>
-                                <option value="" hidden>Proveedor</option>
-                                {proveedores.map((proveedor, index) => (
-                                    <option value={proveedor.pr_IdProveedor ?? index} key={proveedor.pr_IdProveedor ?? index}>
-                                        {proveedor.pr_NombreProveedor ?? ""}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {/* <div>
-                            <label className=" block p-2">Tratamiento Térmico</label>
-                            <select {...register("hesp_IdTratamiento")}>
-                                <option value="" hidden>Tratamiento Térmico</option>
-                                {tratamientos.map((tratamiento, index) => (
-                                    <option value={tratamiento.tr_IdTratamiento ?? index} key={tratamiento.tr_IdTratamiento ?? index}>
-                                        {tratamiento.tr_DescripcionTratamiento ?? ""}
-                                    </option>
-                                ))}
-                            </select>
-                        </div> */}
+            <form onSubmit={handleSubmit(onNextPage, (errors) => console.log("Validation errors:", errors))} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full m-5">
+                <div className="space-y-6">
+                    <div>
+                        <label className="block p-2 font-medium">Acero</label>
+                        <select className="w-full p-2 border rounded" {...register("ac_IdAcero")}>
+                            <option value={0} hidden>Seleccione Acero</option>
+                            {aceros.map((acero: any, index: number) => (
+                                <option value={acero.ac_IdAcero ?? index} key={acero.ac_IdAcero ?? index}>
+                                    {acero.ac_DescripAcero ?? ""}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.ac_IdAcero && <span className="text-red-500 text-sm block mt-1">{errors.ac_IdAcero.message}</span>}
                     </div>
-                </div>
-                {/*------------------------------*/}
-                <div>
-                    <div className="col-start-2 row-start-1">
 
-                        <label className="block p-1">Precio</label>
-                        <input type="number" inputMode="numeric" placeholder="$Precio" />
-                        <label className=" block p-1">Fecha de creación</label>
-                        <input type="date" inputMode="date" placeholder="Create Date " />
-                        <label className=" block">Observaciones</label>
-                        <textarea name="txt" id="" className="h-30 w-[100%]" rows={10}></textarea>
+                    <div>
+                        <label className="block p-2 font-medium">Dureza</label>
+                        <select className="w-full p-2 border rounded" {...register("du_IdDureza")}>
+                            <option value={0} hidden>Seleccione Dureza</option>
+                            {durezas.map((dureza: any, index: number) => (
+                                <option value={dureza.du_IdDureza ?? index} key={dureza.du_IdDureza ?? index}>
+                                    {dureza.du_ValorDureza ?? ""}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.du_IdDureza && <span className="text-red-500 text-sm block mt-1">{errors.du_IdDureza.message}</span>}
+                    </div>
 
+                    <div>
+                        <label className="block p-2 font-medium">Proveedor</label>
+                        <select className="w-full p-2 border rounded" {...register("pr_IdProveedor")}>
+                            <option value={0} hidden>Seleccione Proveedor</option>
+                            {proveedores.map((proveedor: any, index: number) => (
+                                <option value={proveedor.pr_IdProveedor ?? index} key={proveedor.pr_IdProveedor ?? index}>
+                                    {proveedor.pr_NombreProv ?? ""}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.pr_IdProveedor && <span className="text-red-500 text-sm block mt-1">{errors.pr_IdProveedor.message}</span>}
                     </div>
                 </div>
 
-                {/*-----------------Buttons---------------------------------------- */}
+                <div className="space-y-6">
+                    <div>
+                        <label className="block p-1 font-medium">Precio</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            placeholder="$Precio"
+                            className="w-full p-2 border rounded"
+                            {...register("php_PrecioTotal")}
+                        />
+                        {errors.php_PrecioTotal && <span className="text-red-500 text-sm block mt-1">{errors.php_PrecioTotal.message}</span>}
+                    </div>
 
-                <Link to="/Createubic" className="col-start-3 row-start-2">
-                    <button className="btn btn-orange">Continuar</button>
-                </Link>
+                    <div>
+                        <label className="block p-1 font-medium">Fecha de creación</label>
+                        <input
+                            type="date"
+                            className="w-full p-2 border rounded"
+                            {...register("ph_FechaCreacion")}
+                        />
+                        {errors.ph_FechaCreacion && <span className="text-red-500 text-sm block mt-1">{errors.ph_FechaCreacion.message}</span>}
+                    </div>
 
-                <Link to="/CreateMeasures" className="col-start-1 row-start-2">
-                    <button className="btn btn-orange justify-self-end">Atrás</button>
-                </Link>
+                    <div>
+                        <label className="block font-medium mb-1">Observaciones</label>
+                        <textarea
+                            className="w-full p-2 border rounded h-28"
+                            rows={4}
+                            placeholder="Observaciones de la propiedad..."
+                            {...register("ph_DescripHerra")}
+                        ></textarea>
+                        {errors.ph_DescripHerra && <span className="text-red-500 text-sm block mt-1">{errors.ph_DescripHerra.message}</span>}
+                    </div>
+                </div>
+
+                <div className="col-span-1 md:col-span-2 flex justify-between mt-4">
+                    <button type="button" className="btn btn-orange" onClick={() => navigate(-1)}>
+                        Atrás
+                    </button>
+
+                    <button
+                        type="submit"
+                        className="btn btn-orange"
+                    >
+                        Continuar
+                    </button>
+                </div>
             </form>
         </>
-    )
+    );
 }
+

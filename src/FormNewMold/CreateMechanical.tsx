@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { useEffect } from "react";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
+import FilesUpload from "../Components/FilesUpload.js";
 
 export default function CreateMechanical() {
     const { formData, updateFormData } = useFormData();
@@ -43,24 +44,35 @@ export default function CreateMechanical() {
 
     const onNextPage = async (data: MechanicalFormValues) => {
         try {
-            const payload = {
-                ac_IdAcero: data.ac_IdAcero,
-                du_IdDureza: data.du_IdDureza,
-                pr_IdProveedor: data.pr_IdProveedor,
-                php_PrecioTotal: data.php_PrecioTotal ? Number(data.php_PrecioTotal) : null,
-                ph_FechaCreacion: data.ph_FechaCreacion || new Date().toISOString().split('T')[0],
-                ph_DescripHerra: data.ph_DescripHerra || "",
-            };
+            const hasMechanicalData = Boolean(
+                (data.ac_IdAcero && Number(data.ac_IdAcero) > 0) ||
+                (data.du_IdDureza && Number(data.du_IdDureza) > 0) ||
+                (data.pr_IdProveedor && Number(data.pr_IdProveedor) > 0) ||
+                (data.php_PrecioTotal !== "" && data.php_PrecioTotal !== null && data.php_PrecioTotal !== undefined) ||
+                data.ph_FechaCreacion ||
+                data.ph_DescripHerra
+            );
 
             let propiedadId = formData.hesp_IdPropiedadHerramental;
-            try {
-                const resProp = await CreatePost("/api/propiedad_herramental/", "POST", payload);
-                if (resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental) {
-                    propiedadId = resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental;
-                    console.log("Created PropiedadHerramental ID:", propiedadId);
+            if (hasMechanicalData) {
+                const payload = {
+                    ac_IdAcero: data.ac_IdAcero && Number(data.ac_IdAcero) > 0 ? Number(data.ac_IdAcero) : null,
+                    du_IdDureza: data.du_IdDureza && Number(data.du_IdDureza) > 0 ? Number(data.du_IdDureza) : null,
+                    pr_IdProveedor: data.pr_IdProveedor && Number(data.pr_IdProveedor) > 0 ? Number(data.pr_IdProveedor) : null,
+                    php_PrecioTotal: data.php_PrecioTotal ? Number(data.php_PrecioTotal) : null,
+                    ph_FechaCreacion: data.ph_FechaCreacion || new Date().toISOString().split('T')[0],
+                    ph_DescripHerra: data.ph_DescripHerra || "",
+                };
+
+                try {
+                    const resProp = await CreatePost("/api/propiedad_herramental/", "POST", payload);
+                    if (resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental) {
+                        propiedadId = resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental;
+                        console.log("Created PropiedadHerramental ID:", propiedadId);
+                    }
+                } catch (err) {
+                    console.warn("Backend endpoint /api/propiedad_herramental/ not reachable yet. Saving data to context:", err);
                 }
-            } catch (err) {
-                console.warn("Backend endpoint /api/propiedad_herramental/ not reachable yet. Saving data to context:", err);
             }
 
             updateFormData({
@@ -81,9 +93,9 @@ export default function CreateMechanical() {
             <form onSubmit={handleSubmit(onNextPage, (errors) => console.log("Validation errors:", errors))} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full m-5">
                 <div className="space-y-6">
                     <div>
-                        <label className="block p-2 font-medium">Acero</label>
+                        <label className="block p-2 font-medium">Acero (Opcional)</label>
                         <select className="w-full p-2 border rounded" {...register("ac_IdAcero")}>
-                            <option value={0} hidden>Seleccione Acero</option>
+                            <option value={0}>Seleccione Acero</option>
                             {aceros.map((acero: any, index: number) => (
                                 <option value={acero.ac_IdAcero ?? index} key={acero.ac_IdAcero ?? index}>
                                     {acero.ac_DescripAcero ?? ""}
@@ -94,9 +106,9 @@ export default function CreateMechanical() {
                     </div>
 
                     <div>
-                        <label className="block p-2 font-medium">Dureza</label>
+                        <label className="block p-2 font-medium">Dureza (Opcional)</label>
                         <select className="w-full p-2 border rounded" {...register("du_IdDureza")}>
-                            <option value={0} hidden>Seleccione Dureza</option>
+                            <option value={0}>Seleccione Dureza</option>
                             {durezas.map((dureza: any, index: number) => (
                                 <option value={dureza.du_IdDureza ?? index} key={dureza.du_IdDureza ?? index}>
                                     {dureza.du_ValorDureza ?? ""}
@@ -107,9 +119,9 @@ export default function CreateMechanical() {
                     </div>
 
                     <div>
-                        <label className="block p-2 font-medium">Proveedor</label>
+                        <label className="block p-2 font-medium">Proveedor (Opcional)</label>
                         <select className="w-full p-2 border rounded" {...register("pr_IdProveedor")}>
-                            <option value={0} hidden>Seleccione Proveedor</option>
+                            <option value={0}>Seleccione Proveedor</option>
                             {proveedores.map((proveedor: any, index: number) => (
                                 <option value={proveedor.pr_IdProveedor ?? index} key={proveedor.pr_IdProveedor ?? index}>
                                     {proveedor.pr_NombreProv ?? ""}
@@ -122,7 +134,7 @@ export default function CreateMechanical() {
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block p-1 font-medium">Precio</label>
+                        <label className="block p-1 font-medium">Precio (Opcional)</label>
                         <input
                             type="number"
                             step="0.01"
@@ -134,7 +146,7 @@ export default function CreateMechanical() {
                     </div>
 
                     <div>
-                        <label className="block p-1 font-medium">Fecha de creación</label>
+                        <label className="block p-1 font-medium">Fecha de creación (Opcional)</label>
                         <input
                             type="date"
                             className="w-full p-2 border rounded"
@@ -144,7 +156,7 @@ export default function CreateMechanical() {
                     </div>
 
                     <div>
-                        <label className="block font-medium mb-1">Observaciones</label>
+                        <label className="block font-medium mb-1">Observaciones (Opcional)</label>
                         <textarea
                             className="w-full p-2 border rounded h-28"
                             rows={4}
@@ -152,6 +164,11 @@ export default function CreateMechanical() {
                             {...register("ph_DescripHerra")}
                         ></textarea>
                         {errors.ph_DescripHerra && <span className="text-red-500 text-sm block mt-1">{errors.ph_DescripHerra.message}</span>}
+                    </div>
+
+                    <div className=" col-start-2 col-end-4 row-start-2 justify-self-center ">
+                        <h2 className="text-xl font-bold mb-4">Plano de Herramental</h2>
+                        <FilesUpload targetField="hesp_IdPlano" endpoint="/api/documents/" />
                     </div>
                 </div>
 

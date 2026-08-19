@@ -10,7 +10,7 @@ import LoadingAnimation from "../Components/LoadingAnimation.jsx";
 import z from "zod";
 import DropDown from "../Components/DropDown";
 import familiasSchema from "../assets/Schemas/familias.schema.json" with { type: "json" };
-import FilesUpload from '../Components/FilesUpload.js';
+import FilesUpload from '../Components/FilesUpload';
 import useToolImage from "../Hooks/useToolImage.js";
 
 const EditHerramentalSchema = z.object({
@@ -20,9 +20,14 @@ const EditHerramentalSchema = z.object({
     hesp_CodigoAlterno: z.string().min(1, "Requerido"),
     hesp_CodigoHerramental: z.string().optional(),
     hesp_Descripcion1: z.string().optional(),
+    fa_CodigoFamilia: z.string().optional(),
+    fa_NombreFamilia: z.string().optional(),
     consecutive: z.coerce.number().optional(),
     hesp_IdImagen: z.coerce.number().int().nullable().optional(),
+    hesp_IdPlano: z.coerce.number().int().nullable().optional(),
+    hesp_IdManual: z.coerce.number().int().nullable().optional(),
     hesp_IdPropiedadHerramental: z.coerce.number().int().nullable().optional(),
+    hesp_Criticidad: z.string().nullable().optional(),
 
     // Measures
     hesp_A: z.coerce.number().nullable().optional(),
@@ -122,6 +127,9 @@ export default function EditHerramental() {
             php_PrecioTotal: "",
             ph_FechaCreacion: "",
             ph_DescripHerra: "",
+            hesp_Criticidad: "",
+            hesp_IdPlano: null,
+            hesp_IdManual: null,
         }
     });
 
@@ -136,6 +144,8 @@ export default function EditHerramental() {
     } = watched;
 
     const { imageUrl } = useToolImage(watched.hesp_IdImagen);
+    const { planoUrl } = useToolImage(watched.hesp_IdPlano);
+    const { manualUrl } = useToolImage(watched.hesp_IdManual);
 
     // Load tool details and dropdown data in parallel
     useEffect(() => {
@@ -364,143 +374,216 @@ export default function EditHerramental() {
     if (loading || isSaving) return <LoadingAnimation />;
 
     return (
-        <>
+        <div className="min-h-screen bg-gray-50 flex flex-col">
             <NavBar />
-            <div className="max-w-7xl mx-auto p-4 md:p-8 font-['Poppins']">
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold">Editar Herramental: {generalData?.hesp_CodigoHerramental}</h1>
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 font-['Poppins']">
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-3 border-b border-gray-200">
+                    <div>
+                        <span className="text-xs uppercase font-bold tracking-wider text-orange-600 block mb-1">
+                            Módulo de Edición
+                        </span>
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#003064] tracking-tight break-words">
+                            Editar Herramental: <span className="text-orange-500">{generalData?.hesp_CodigoHerramental || "..."}</span>
+                        </h1>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit, (errs) => console.log("Validation errors:", errs))} className="space-y-6">
                     {/* SECTION 1: General Data */}
-                    <div className="bg-gray-50 p-6 rounded-lg border">
-                        <h2 className="text-xl font-bold mb-4">Información General</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Información General
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             <div>
-                                <label className="block p-2 font-bold" htmlFor="NombreHerramental">Categoría Herramental</label>
-                                <select {...register("hesp_IdHerramental")} disabled className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1" htmlFor="hesp_IdHerramental">
+                                    Categoría Herramental
+                                </label>
+                                <select
+                                    id="hesp_IdHerramental"
+                                    {...register("hesp_IdHerramental")}
+                                    disabled
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                                >
                                     <option value="">Seleccione Herramental</option>
                                     {dropdowns.herramentales?.map((item: any) => (
                                         <option value={item.he_IdHerramental} key={item.he_IdHerramental}>{item.he_NombreHerramental}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdHerramental && <p className="text-red-500 text-sm">{errors.hesp_IdHerramental.message}</p>}
+                                {errors.hesp_IdHerramental && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdHerramental.message}</p>}
                             </div>
 
                             <div>
-                                <label htmlFor="NombreTipoHerramental" className="block p-2 font-bold">Uso del Herramental</label>
-                                <select {...register("hesp_IdTipoHerramental")} disabled className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed">
+                                <label htmlFor="hesp_IdTipoHerramental" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
+                                    Uso del Herramental
+                                </label>
+                                <select
+                                    id="hesp_IdTipoHerramental"
+                                    {...register("hesp_IdTipoHerramental")}
+                                    disabled
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                                >
                                     <option value="">Seleccione tipo de uso</option>
                                     {dropdowns.tipo_herramental?.map((typeh: any) => (
                                         <option value={typeh.th_IdTipoHerramental} key={typeh.th_IdTipoHerramental}>{typeh.th_NombreTipoHerramental}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdTipoHerramental && <p className="text-red-500 text-sm">{errors.hesp_IdTipoHerramental.message}</p>}
+                                {errors.hesp_IdTipoHerramental && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdTipoHerramental.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold" htmlFor="NombreFamilia">Familia Herramental</label>
-                                <select {...register("hesp_IdFamilia")} disabled className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1" htmlFor="hesp_IdFamilia">
+                                    Familia Herramental
+                                </label>
+                                <select
+                                    id="hesp_IdFamilia"
+                                    {...register("hesp_IdFamilia")}
+                                    disabled
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                                >
                                     <option value="">Seleccione Familia</option>
                                     {dropdowns.familias?.map((item: any) => (
                                         <option value={item.fa_IdFamilia} key={item.fa_IdFamilia}>{item.fa_NombreFamilia}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdFamilia && <p className="text-red-500 text-sm">{errors.hesp_IdFamilia.message}</p>}
+                                {errors.hesp_IdFamilia && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdFamilia.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold" htmlFor="CodigoAlterno">Código Alterno</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1" htmlFor="hesp_CodigoAlterno">
+                                    Código Alterno
+                                </label>
                                 <input
+                                    id="hesp_CodigoAlterno"
                                     type="text"
                                     {...register("hesp_CodigoAlterno")}
-                                    className="w-full p-2 border rounded bg-white"
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                                 />
-                                {errors.hesp_CodigoAlterno && <p className="text-red-500 text-sm">{errors.hesp_CodigoAlterno.message}</p>}
+                                {errors.hesp_CodigoAlterno && <p className="text-red-500 text-xs mt-1">{errors.hesp_CodigoAlterno.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1" htmlFor="hesp_Criticidad">
+                                    Criticidad Herramental
+                                </label>
+                                <select
+                                    id="hesp_Criticidad"
+                                    {...register("hesp_Criticidad")}
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                >
+                                    <option disabled value="">Seleccione Criticidad</option>
+                                    <option value="Baja">Baja</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                                {errors.hesp_Criticidad && <p className="text-red-500 text-xs mt-1">{errors.hesp_Criticidad.message}</p>}
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     {/* SECTION 2: IMAGE */}
-                    <div className="bg-gray-50 p-6 rounded-lg border">
-                        <h2 className="text-xl font-bold mb-4">Imagen de Herramental</h2>
-                        <div className="flex flex-col md:flex-row items-center gap-6">
-                            {imageUrl ? (
-                                <img
-                                    src={imageUrl}
-                                    alt={generalData?.hesp_CodigoHerramental || "Imagen de herramental"}
-                                    className="max-w-xs aspect-[3/4] object-contain border border-gray-300 rounded shadow-sm"
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Imagen de Herramental
+                        </h2>
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                            <div className="w-full max-w-[240px] sm:max-w-[280px] shrink-0 flex flex-col items-center">
+                                <span className="text-xs font-semibold text-gray-500 mb-2">Vista Previa Actual</span>
+                                {imageUrl ? (
+                                    <img
+                                        src={imageUrl}
+                                        alt={generalData?.hesp_CodigoHerramental || "Imagen de herramental"}
+                                        className="w-full aspect-[3/4] object-contain border border-gray-200 bg-gray-50 rounded-lg shadow-xs"
+                                    />
+                                ) : (
+                                    <img
+                                        src="./default-image.svg"
+                                        alt="Default"
+                                        className="w-full aspect-[3/4] object-cover border border-gray-200 bg-gray-50 rounded-lg shadow-xs"
+                                    />
+                                )}
+                            </div>
+                            <div className="w-full flex-1">
+                                <FilesUpload
+                                    targetField="hesp_IdImagen"
+                                    onUploadSuccess={(imageId) => {
+                                        setValue("hesp_IdImagen", imageId, { shouldDirty: true });
+                                    }}
                                 />
-                            ) : (
-                                <img
-                                    src="./default-image.svg"
-                                    alt="Default"
-                                    className="max-w-xs aspect-[3/4] object-cover border border-gray-300 rounded shadow-sm"
-                                />
-                            )}
-                            <div className="flex-grow">
-                                <FilesUpload onUploadSuccess={(imageId) => {
-                                    setValue("hesp_IdImagen", imageId, { shouldDirty: true });
-                                }} />
                             </div>
                         </div>
-                    </div>
+                    </section>
 
                     {/* SECTION 3: Dynamic Technical Measures */}
-                    <div className="bg-gray-50 p-6 rounded-lg border">
-                        <h2 className="text-xl font-bold mb-4">Medidas Técnicas (Familia: {familyName})</h2>
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Medidas Técnicas (Familia: {familyName || "General"})
+                        </h2>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                             {literals.map((lit) => (
-                                <div key={lit}>
-                                    <label className="block p-1 font-bold text-xs uppercase text-gray-500">Medida {lit}</label>
+                                <div key={lit} className="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
+                                    <label className="block text-xs font-bold uppercase text-gray-600 mb-1">
+                                        Medida {lit}
+                                    </label>
                                     <input
                                         type="number"
                                         step="0.01"
                                         placeholder={`Valor ${lit}`}
                                         {...register(`hesp_${lit}` as any, { valueAsNumber: true })}
-                                        className={`border p-2 w-full rounded bg-white ${errors[`hesp_${lit}` as any] ? "border-red-500" : ""}`}
+                                        className={`w-full p-2 text-sm border rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none ${errors[`hesp_${lit}` as any] ? "border-red-500" : "border-gray-300"}`}
                                     />
                                     {errors[`hesp_${lit}` as any] && (
-                                        <span className="text-red-500 text-xs">Requerido</span>
+                                        <span className="text-red-500 text-xs mt-1 block">Requerido</span>
                                     )}
                                 </div>
                             ))}
                         </div>
 
                         {schemeUrl && (
-                            <div className="mt-6 flex flex-col items-center border-t pt-6">
-                                <h3 className="font-bold text-sm text-gray-700 mb-2 uppercase">Esquema Técnico de Referencia</h3>
-                                <img
-                                    src={schemeUrl}
-                                    alt={`Esquema ${familyName}`}
-                                    className="max-h-64 object-contain border p-2 bg-white rounded"
-                                    onError={(e) => {
-                                        e.currentTarget.src = "/media/esquemas/HEX.png";
-                                    }}
-                                />
+                            <div className="mt-6 flex flex-col items-center border-t border-gray-200 pt-6">
+                                <h3 className="font-bold text-sm text-gray-700 mb-3 uppercase tracking-wide">
+                                    Esquema Técnico de Referencia
+                                </h3>
+                                <div className="w-full max-w-lg p-2 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center shadow-xs">
+                                    <img
+                                        src={schemeUrl}
+                                        alt={`Esquema ${familyName}`}
+                                        className="max-h-64 sm:max-h-80 w-auto object-contain"
+                                        onError={(e) => {
+                                            e.currentTarget.src = "/media/esquemas/HEX.png";
+                                        }}
+                                    />
+                                </div>
                             </div>
                         )}
-                    </div>
+                    </section>
 
                     {/* SECTION 4: Location and Status */}
-                    <div className="bg-gray-50 p-6 rounded-lg border">
-                        <h2 className="text-xl font-bold mb-4">Ubicación y Estado</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Ubicación y Estado
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                             <div>
-                                <label className="block p-2 font-bold">N° Máquina PP</label>
-                                <select {...register("hesp_IdMaquinaPP")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">N° Máquina PP</label>
+                                <select {...register("hesp_IdMaquinaPP")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione Máquina</option>
                                     {dropdowns.maquinas?.map((maquina: any) => (
                                         <option value={maquina.id} key={maquina.id}>{maquina.numero}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdMaquinaPP && <p className="text-red-500 text-sm">{errors.hesp_IdMaquinaPP.message}</p>}
+                                {errors.hesp_IdMaquinaPP && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdMaquinaPP.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">N° Máquina Opcional</label>
-                                <select {...register("hesp_IdMaquinaOpc")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">N° Máquina Opcional</label>
+                                <select {...register("hesp_IdMaquinaOpc")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione Máquina</option>
                                     {dropdowns.maquinas?.map((maquina: any) => (
                                         <option value={maquina.id} key={maquina.id}>{maquina.numero}</option>
@@ -509,70 +592,70 @@ export default function EditHerramental() {
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">DieSet</label>
-                                <select {...register("hesp_IdDieSet")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">DieSet</label>
+                                <select {...register("hesp_IdDieSet")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione DieSet</option>
                                     {dropdowns.diesets?.map((dieSet: any) => (
                                         <option value={dieSet.di_IdDieSet} key={dieSet.di_IdDieSet}>{dieSet.di_CodigoDieSet}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdDieSet && <p className="text-red-500 text-sm">{errors.hesp_IdDieSet.message}</p>}
+                                {errors.hesp_IdDieSet && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdDieSet.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Piso</label>
-                                <select {...register("hesp_IdPiso")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Piso</label>
+                                <select {...register("hesp_IdPiso")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione Piso</option>
                                     {dropdowns.pisos?.map((piso: any) => (
                                         <option value={piso.pi_NumeroPiso} key={piso.pi_NumeroPiso}>{piso.pi_DescripcionPiso}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdPiso && <p className="text-red-500 text-sm">{errors.hesp_IdPiso.message}</p>}
+                                {errors.hesp_IdPiso && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdPiso.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Estante</label>
-                                <select {...register("hesp_IdEstanteria")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Estante</label>
+                                <select {...register("hesp_IdEstanteria")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione Estante</option>
                                     {dropdowns.estanterias?.map((estante: any) => (
                                         <option value={estante.es_IdEstanteria} key={estante.es_IdEstanteria}>{estante.es_NombreEstanteria}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdEstanteria && <p className="text-red-500 text-sm">{errors.hesp_IdEstanteria.message}</p>}
+                                {errors.hesp_IdEstanteria && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdEstanteria.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Fila</label>
-                                <DropDown length={8} start={0} {...register("uh_NumeroFila")} className="w-full p-2 border rounded bg-white" />
-                                {errors.uh_NumeroFila && <p className="text-red-500 text-sm">{errors.uh_NumeroFila.message}</p>}
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Fila</label>
+                                <DropDown length={8} start={0} {...register("uh_NumeroFila")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none" />
+                                {errors.uh_NumeroFila && <p className="text-red-500 text-xs mt-1">{errors.uh_NumeroFila.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Columna</label>
-                                <DropDown length={31} start={0} {...register("uh_NumeroColumna")} className="w-full p-2 border rounded bg-white" />
-                                {errors.uh_NumeroColumna && <p className="text-red-500 text-sm">{errors.uh_NumeroColumna.message}</p>}
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Columna</label>
+                                <DropDown length={31} start={0} {...register("uh_NumeroColumna")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none" />
+                                {errors.uh_NumeroColumna && <p className="text-red-500 text-xs mt-1">{errors.uh_NumeroColumna.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Posición</label>
-                                <DropDown length={22} start={0} {...register("uh_NumeroPosicion")} className="w-full p-2 border rounded bg-white" />
-                                {errors.uh_NumeroPosicion && <p className="text-red-500 text-sm">{errors.uh_NumeroPosicion.message}</p>}
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Posición</label>
+                                <DropDown length={22} start={0} {...register("uh_NumeroPosicion")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none" />
+                                {errors.uh_NumeroPosicion && <p className="text-red-500 text-xs mt-1">{errors.uh_NumeroPosicion.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Estado</label>
-                                <select {...register("hesp_IdEstadoHerr")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Estado</label>
+                                <select {...register("hesp_IdEstadoHerr")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione Estado</option>
                                     {dropdowns.estados?.map((estado: any) => (
                                         <option value={estado.eh_IdEstadoHerr} key={estado.eh_IdEstadoHerr}>{estado.eh_NombreEstado}</option>
                                     ))}
                                 </select>
-                                {errors.hesp_IdEstadoHerr && <p className="text-red-500 text-sm">{errors.hesp_IdEstadoHerr.message}</p>}
+                                {errors.hesp_IdEstadoHerr && <p className="text-red-500 text-xs mt-1">{errors.hesp_IdEstadoHerr.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Actividad Pendiente</label>
-                                <select {...register("hesp_IdActividad")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Actividad Pendiente</label>
+                                <select {...register("hesp_IdActividad")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value="">Seleccione Actividad</option>
                                     {dropdowns.actividades?.map((actividad: any) => (
                                         <option value={actividad.id} key={actividad.id}>{actividad.nombre}</option>
@@ -581,33 +664,37 @@ export default function EditHerramental() {
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Existencia</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Existencia</label>
                                 <input
                                     type="number"
                                     {...register("hesp_CantHerramental")}
-                                    className="w-full p-2 border rounded bg-white"
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
-                                {errors.hesp_CantHerramental && <p className="text-red-500 text-sm">{errors.hesp_CantHerramental.message}</p>}
+                                {errors.hesp_CantHerramental && <p className="text-red-500 text-xs mt-1">{errors.hesp_CantHerramental.message}</p>}
+                            </div>
+
+                            <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 mt-2">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Observaciones Generales</label>
+                                <textarea
+                                    {...register("hesp_Observacion")}
+                                    className="w-full p-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    rows={3}
+                                    placeholder="Observaciones de ubicación o estado..."
+                                />
                             </div>
                         </div>
-
-                        <div className="mt-4">
-                            <label className="block p-2 font-bold">Observaciones Generales</label>
-                            <textarea
-                                {...register("hesp_Observacion")}
-                                className="w-full p-2 border rounded bg-white"
-                                rows={4}
-                            />
-                        </div>
-                    </div>
+                    </section>
 
                     {/* SECTION 5: Mechanical Properties */}
-                    <div className="bg-gray-50 p-6 rounded-lg border">
-                        <h2 className="text-xl font-bold mb-4">Propiedades Mecánicas</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Propiedades Mecánicas
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             <div>
-                                <label className="block p-2 font-bold">Acero</label>
-                                <select {...register("ac_IdAcero")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Acero</label>
+                                <select {...register("ac_IdAcero")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value={0}>Seleccione Acero</option>
                                     {dropdowns.aceros?.map((acero: any, idx: number) => (
                                         <option value={acero.ac_IdAcero ?? idx} key={acero.ac_IdAcero ?? idx}>
@@ -615,12 +702,12 @@ export default function EditHerramental() {
                                         </option>
                                     ))}
                                 </select>
-                                {errors.ac_IdAcero && <p className="text-red-500 text-sm">{errors.ac_IdAcero.message}</p>}
+                                {errors.ac_IdAcero && <p className="text-red-500 text-xs mt-1">{errors.ac_IdAcero.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Dureza</label>
-                                <select {...register("du_IdDureza")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Dureza</label>
+                                <select {...register("du_IdDureza")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value={0}>Seleccione Dureza</option>
                                     {dropdowns.durezas?.map((dureza: any, idx: number) => (
                                         <option value={dureza.du_IdDureza ?? idx} key={dureza.du_IdDureza ?? idx}>
@@ -628,12 +715,12 @@ export default function EditHerramental() {
                                         </option>
                                     ))}
                                 </select>
-                                {errors.du_IdDureza && <p className="text-red-500 text-sm">{errors.du_IdDureza.message}</p>}
+                                {errors.du_IdDureza && <p className="text-red-500 text-xs mt-1">{errors.du_IdDureza.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Proveedor</label>
-                                <select {...register("pr_IdProveedor")} className="w-full p-2 border rounded bg-white">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Proveedor</label>
+                                <select {...register("pr_IdProveedor")} className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none">
                                     <option value={0}>Seleccione Proveedor</option>
                                     {dropdowns.proveedores?.map((proveedor: any, idx: number) => (
                                         <option value={proveedor.pr_IdProveedor ?? idx} key={proveedor.pr_IdProveedor ?? idx}>
@@ -641,61 +728,96 @@ export default function EditHerramental() {
                                         </option>
                                     ))}
                                 </select>
-                                {errors.pr_IdProveedor && <p className="text-red-500 text-sm">{errors.pr_IdProveedor.message}</p>}
+                                {errors.pr_IdProveedor && <p className="text-red-500 text-xs mt-1">{errors.pr_IdProveedor.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Precio Total</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Precio Total</label>
                                 <input
                                     type="number"
                                     step="0.01"
-                                    placeholder="$Precio"
-                                    className="w-full p-2 border rounded bg-white"
+                                    placeholder="$ Precio"
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none"
                                     {...register("php_PrecioTotal")}
                                 />
-                                {errors.php_PrecioTotal && <p className="text-red-500 text-sm">{errors.php_PrecioTotal.message}</p>}
+                                {errors.php_PrecioTotal && <p className="text-red-500 text-xs mt-1">{errors.php_PrecioTotal.message}</p>}
                             </div>
 
                             <div>
-                                <label className="block p-2 font-bold">Fecha de creación</label>
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Fecha de creación</label>
                                 <input
                                     type="date"
-                                    className="w-full p-2 border rounded bg-white"
+                                    className="w-full p-2.5 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none"
                                     {...register("ph_FechaCreacion")}
                                 />
-                                {errors.ph_FechaCreacion && <p className="text-red-500 text-sm">{errors.ph_FechaCreacion.message}</p>}
+                                {errors.ph_FechaCreacion && <p className="text-red-500 text-xs mt-1">{errors.ph_FechaCreacion.message}</p>}
                             </div>
 
-                            <div>
-                                <label className="block p-2 font-bold">Observaciones de Propiedad</label>
+                            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Observaciones de Propiedad</label>
                                 <textarea
-                                    className="w-full p-2 border rounded bg-white"
+                                    className="w-full p-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none transition"
                                     placeholder="Observaciones de la propiedad..."
+                                    rows={3}
                                     {...register("ph_DescripHerra")}
                                 />
-                                {errors.ph_DescripHerra && <p className="text-red-500 text-sm">{errors.ph_DescripHerra.message}</p>}
+                                {errors.ph_DescripHerra && <p className="text-red-500 text-xs mt-1">{errors.ph_DescripHerra.message}</p>}
                             </div>
                         </div>
-                    </div>
+                    </section>
+
+                    {/* SECTION 6: PLANOS */}
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Planos de Herramental
+                        </h2>
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                            <div className="w-full max-w-[240px] sm:max-w-[280px] shrink-0 flex flex-col items-center">
+                                <span className="text-xs font-semibold text-gray-500 mb-2">Vista Previa Actual</span>
+                                {planoUrl ? (
+                                    <img
+                                        src={planoUrl}
+                                        alt={generalData?.hesp_CodigoHerramental || "Plano de herramental"}
+                                        className="w-full aspect-[3/4] object-contain border border-gray-200 bg-gray-50 rounded-lg shadow-xs"
+                                    />
+                                ) : (
+                                    <img
+                                        src="./default-image.svg"
+                                        alt="Default"
+                                        className="w-full aspect-[3/4] object-cover border border-gray-200 bg-gray-50 rounded-lg shadow-xs"
+                                    />
+                                )}
+                            </div>
+                            <div className="w-full flex-1">
+                                <FilesUpload
+                                    targetField="hesp_IdPlano"
+                                    onUploadSuccess={(planoId) => {
+                                        setValue("hesp_IdPlano", planoId, { shouldDirty: true });
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </section>
 
                     {/* Form Buttons */}
-                    <div className="flex justify-between items-center pt-6 border-t">
+                    <div className="flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-4 pt-6 border-t border-gray-200">
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="px-6 py-2 border rounded text-gray-700 bg-white hover:bg-gray-50 transition"
+                            className="w-full sm:w-auto px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 text-center font-medium transition cursor-pointer shadow-xs"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded font-bold transition"
+                            className="w-full sm:w-auto px-8 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold text-center transition cursor-pointer shadow-md hover:shadow-lg"
                         >
                             Guardar Cambios
                         </button>
                     </div>
                 </form>
-            </div>
-        </>
+            </main>
+        </div>
     );
 }

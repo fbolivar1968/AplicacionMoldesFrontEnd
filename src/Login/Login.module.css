@@ -64,7 +64,12 @@
     padding-top: 5%;
     font-family: "Poppins", sans-serif;
     border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px
+    border-bottom-left-radius: 16px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        display: hidden;
+    }
 
 
 }
@@ -161,4 +166,3 @@
     background-color: #4d4d4d;
     border-color: #4d4d4d;
 }
-

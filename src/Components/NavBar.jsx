@@ -16,19 +16,19 @@ export default function NavBar() {
 
 
     return (
-        <nav className="flex justify-between w-full h-[10%] drop-shadow-md shadow-[4px] bg-[var(--color-blueFB)]">
-            <ul className="flex items-center gap-6 text-white drop-shadow-md shadow-[4px] pl-1 m-1.5;">
+        <nav className="flex justify-between drop-shadow-md shadow-[4px] bg-[var(--color-blueFB)] w-auto h-[40px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ul className="flex items-center gap-6 text-white drop-shadow-md shadow-[4px] pl-1 m-5;">
                 <Link to={"/VisualGnrlv2"}>
                     <img className="max-w-1/30 mx-4  transition-all hidden sm:flex" src={logo} alt="logo" />
                 </Link>
 
                 <Link
                     to={"/VisualGnrlv2"}>
-                    <li className="border-t-2 border-white py-0.5 hover:border-orangeFB"> Home</li>
+                    <li className="border-t-2 border-white py-0.5 hover:border-orangeFB">Inicio</li>
                 </Link>
                 {user && user.user_type !== 3 && (
                     <Link to={"/CreateGnrlv1"}>
-                        <li className="border-t-2 border-white py-0.5 hover:border-orangeFB">Moldes</li>
+                        <li className="border-t-2 border-white py-0.5 hover:border-orangeFB">Crear Nuevo</li>
                     </Link>
                 )}
                 <Link to={"/OrdAPiMold"}>
@@ -42,7 +42,7 @@ export default function NavBar() {
                     </li>
                 </Link>
                 <Link to={"/Login"}>
-                    <li className="border-t-2 border-white py-0.5 hover:border-orangeFB">Log out</li>
+                    <li className="border-t-2 border-white py-0.5 hover:border-orangeFB">Salir</li>
                 </Link>
             </ul>
         </nav>

@@ -35,7 +35,7 @@ export default function FilterForm({
     const { useGetLookups } = useHerramental();
     const selectId = useId();
 
-    const [internalIsOpen, setInternalIsOpen] = useState(true);
+    const [internalIsOpen, setInternalIsOpen] = useState(false);
     const isOpen = propIsOpen !== undefined ? propIsOpen : internalIsOpen;
 
     const toggleOpen = () => {
@@ -46,7 +46,7 @@ export default function FilterForm({
         }
     };
 
-    // 1. Obtenemos todos los datos usando el nuevo hook
+    // 1. Get data for filters
     const { tipos, familias, maquinas, estanterias, dieSets } = useGetLookups();
 
     const { handleSubmit, setValue } = useForm({
@@ -62,7 +62,7 @@ export default function FilterForm({
         },
     });
 
-    // 2. Estado de carga global (opcional)
+    // 2. Global loading state (optional)
     const isLoading = tipos.isLoading || familias.isLoading || maquinas.isLoading || estanterias.isLoading;
 
     const onSubmit = (data: any) => {
@@ -82,7 +82,7 @@ export default function FilterForm({
         >
             <button
                 type="button"
-                className="absolute top-4 -right-12 z-50 p-2 rounded-r-md bg-orangeFB text-white shadow-md hover:bg-orange-600 focus:outline-none cursor-pointer flex items-center justify-center"
+                className="absolute top-10 -right-12 z-50 p-2 rounded-r-md bg-orangeFB text-white shadow-md hover:bg-orange-600 focus:outline-none cursor-pointer flex items-center justify-center"
                 onClick={toggleOpen}>
                 <MenuIcon fontSize="large" className="text-blueFB" />
             </button>

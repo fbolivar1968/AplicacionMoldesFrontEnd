@@ -29,7 +29,7 @@ export default function Search({ globalFilter, setGlobalFilter }) {
                     value={globalFilter ?? ''}
                     onChange={e => setGlobalFilter(e.target.value)}
                     placeholder="Busca por palabra clave"
-                    className=" border-light-greyFB bg-white rounded-sm border-2">
+                    className=" border-light-greyFB bg-white rounded-sm border-2 w-auto">
                 </input>
             </div>
         </ThemeProvider>

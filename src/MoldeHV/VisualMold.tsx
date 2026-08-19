@@ -31,6 +31,8 @@ export default function VisualMold() {
 
     const { imageUrl } = useToolImage(toolData?.hesp_IdImagen);
 
+    const [isOpen, setIsOpen] = useState(false);
+
     const familyInfo = toolData ? familiasSchema[toolData.codigo_familia as keyof typeof familiasSchema] : null;
 
     const qrCodeValue = useToolQrCode(toolData);
@@ -96,15 +98,17 @@ export default function VisualMold() {
                             </div>
                             <div className="p-3 space-y-1">
                                 <p><strong>Máquinas compatibles</strong></p>
-                                <p><strong>N° Maq. Principal:</strong> {toolData.nombre_maquina_pp}</p>
-                                <p><strong>N° Maq. Opcional:</strong> {toolData.nombre_maquina_opc || "Sin Maq. Opcional"} </p>
+                                <p><strong>N° Maq. Principal:</strong> {toolData.num_maquina_pp}</p>
+                                <p><strong>N° Maq. Opcional:</strong> {toolData.num_maquina_opc || "Sin Maq. Opcional"} </p>
                                 <p><strong>Die-Set:</strong> {toolData.codigo_dieset}</p>
                             </div>
                         </div>
 
-                        <button className={`btn-orange text-white py-2 px-4 rounded w-max mt-4 text-sm font-bold uppercase`}>
+
+
+                        {/* <button className={`btn-orange text-white py-2 px-4 rounded w-max mt-4 text-sm font-bold uppercase`}>
                             Historial producción
-                        </button>
+                        </button> */}
                     </div>
 
                     {/* COLUMN 2: QR, Location & Schema */}
@@ -112,11 +116,45 @@ export default function VisualMold() {
                         {/* QR & ID Section */}
                         <div className="flex items-center space-x-4">
                             <div className="w-24 h-24 bg-white flex items-center justify-center border border-gray-300 rounded p-1 shadow-sm">
-                                <QRCode
-                                    value={qrCodeValue}
-                                    size={256}
-                                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                />
+                                <button onClick={() => setIsOpen(true)}>
+                                    <QRCode
+                                        value={qrCodeValue}
+                                        size={256}
+                                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                                    />
+                                </button>
+                                <React.Fragment>
+                                    {isOpen && (
+                                        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                                            <div className="bg-white p-6 rounded-lg shadow-lg">
+                                                <div className="text-sm border border-gray-200">
+                                                    <div className={`lightGrey p-3 space-y-1`}>
+                                                        <p><strong>Descripción QR</strong></p>
+                                                        <p><strong>N° Molde:</strong> {toolData.hesp_IdHerramentalEspecifico}</p>
+                                                        <p><strong>Codigo Alterno:</strong> {toolData.hesp_CodigoAlterno}</p>
+                                                        <p><strong>Tipo de Herramental:</strong>{toolData.nombre_tipo_herra}</p>
+                                                        <p><strong>Familia:</strong> {toolData.nombre_familia}</p>
+                                                        <p><strong>Maquina Principal:</strong> {toolData.num_maquina_pp}</p>
+                                                        <p><strong>Maquina Opcional:</strong> {toolData.num_maquina_opc}</p>
+                                                        <p><strong>Piso:</strong> {toolData.numero_piso}</p>
+                                                        <p><strong>Estante:</strong> {toolData.nombre_estanteria}</p>
+                                                        <p><strong>Fila:</strong> {toolData.numero_fila}</p>
+                                                        <p><strong>Columna:</strong> {toolData.numero_columna}</p>
+                                                        <p><strong>Posición:</strong> {toolData.numero_posicion}</p>
+                                                        <p><strong>Estado:</strong> {toolData.nombre_estado_Herr}</p>
+                                                        <p><strong>Cantidad de Herramental:</strong> {toolData.hesp_CantHerramental}</p>
+                                                    </div>
+                                                </div>
+
+                                                <button onClick={() => setIsOpen(false)} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+                                                    Cerrar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </React.Fragment>
+                                {/* QR Description */}
+
                             </div>
                             <h2 className="text-4xl font-black orangeText">
                                 {toolData.hesp_CodigoHerramental}

@@ -44,9 +44,9 @@
     ]
   },
   "OV": {
-    "Familia": "OVALADA",
+    "Familia": "OVALADO",
     "CodFamilia": "OV",
-    "EsquemaFamilia": "OVALADA",
+    "EsquemaFamilia": "OVALADO",
     "Literals": [
       "A",
       "B",
@@ -57,9 +57,9 @@
     ]
   },
   "PA": {
-    "Familia": "PALETAS",
+    "Familia": "PALETA",
     "CodFamilia": "PA",
-    "EsquemaFamilia": "PALETAS",
+    "EsquemaFamilia": "PALETA",
     "Literals": [
       "A",
       "B",
@@ -155,9 +155,9 @@
     ]
   },
   "ANS": {
-    "Familia": "ANCLAJEVS",
+    "Familia": "ANCLAJEV",
     "CodFamilia": "ANS",
-    "EsquemaFamilia": "ANCLAJEVS",
+    "EsquemaFamilia": "ANCLAJEV",
     "Literals": [
       "A",
       "B",
@@ -326,9 +326,9 @@
     ]
   },
   "TA": {
-    "Familia": "TAPÓN",
+    "Familia": "TAPON",
     "CodFamilia": "TA",
-    "EsquemaFamilia": "TAPÓN",
+    "EsquemaFamilia": "TAPON",
     "Literals": [
       "A",
       "B",
@@ -373,9 +373,9 @@
     ]
   },
   "TB": {
-    "Familia": "PISO TABLILLA",
+    "Familia": "TABLILLA",
     "CodFamilia": "TB",
-    "EsquemaFamilia": "PISO TABLILLA",
+    "EsquemaFamilia": "TABLILLA",
     "Literals": [
       "A",
       "B",
@@ -420,6 +420,231 @@
       "A",
       "B",
       "C"
+    ]
+  },
+  "CR": {
+    "Familia": "CUERPO",
+    "CodFamilia": "CR",
+    "EsquemaFamilia": "RADIO8",
+    "Literals": [
+      "A",
+      "B",
+      "C"
+    ]
+  },
+  "PI": {
+    "Familia": "PISO",
+    "CodFamilia": "PI",
+    "EsquemaFamilia": "PISO",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "SLM": {
+    "Familia": "SELLO LABERINTO MACHO",
+    "CodFamilia": "SLM",
+    "EsquemaFamilia": "SELLO LABERINTO MACHO",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "SLH": {
+    "Familia": "SELLO LABERINTO HEMBRA",
+    "CodFamilia": "SLH",
+    "EsquemaFamilia": "SELLO LABERINTO HEMBRA",
+    "Literals": [
+      "A",
+      "B",
+      "C"
+    ]
+  },
+  "AC": {
+    "Familia": "ARANDELA CONCAVA",
+    "CodFamilia": "AC",
+    "EsquemaFamilia": "ARANDELA CONCAVA",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "ER": {
+    "Familia": "ESLABON REDONDO",
+    "CodFamilia": "ER",
+    "EsquemaFamilia": "ESLABON REDONDO",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "ED": {
+    "Familia": "ESLABON DIAMANTE",
+    "CodFamilia": "ED",
+    "EsquemaFamilia": "ESLABON DIAMANTE",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "ACR": {
+    "Familia": "ARCO CIERRE",
+    "CodFamilia": "ACR",
+    "EsquemaFamilia": "ARCO CIERRE",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "PG": {
+    "Familia": "PLACA GUIA",
+    "CodFamilia": "PG",
+    "EsquemaFamilia": "PLACA GUIA",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "CÑ": {
+    "Familia": "CUÑA",
+    "CodFamilia": "CÑ",
+    "EsquemaFamilia": "CUÑA",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ]
+  },
+  "PC": {
+    "Familia": "PASADOR CARAPLANA",
+    "CodFamilia": "PC",
+    "EsquemaFamilia": "PASADOR CARAPLANA",
+    "Literals": [
+      "A",
+      "B",
+      "C"
+    ]
+  },
+  "PS": {
+    "Familia": "POSTIZO",
+    "CodFamilia": "PS",
+    "EsquemaFamilia": "POSTIZO",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "PN": {
+    "Familia": "PASADOR NARIZ",
+    "CodFamilia": "PN",
+    "EsquemaFamilia": "PASADOR NARIZ",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "BRR": {
+    "Familia": "BARRETA",
+    "CodFamilia": "BRR",
+    "EsquemaFamilia": "BARRETA",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I"
+    ]
+  },
+  "BR": {
+    "Familia": "BUJE RUEDA",
+    "CodFamilia": "BR",
+    "EsquemaFamilia": "BUJE RUEDA",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "SJ": {
+    "Familia": "SUJETADOR",
+    "CodFamilia": "SJ",
+    "EsquemaFamilia": "SUJETADOR",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "RA": {
+    "Familia": "RASCADOR",
+    "CodFamilia": "RA",
+    "EsquemaFamilia": "RASCADOR",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "CN": {
+    "Familia": "CANGILONES",
+    "CodFamilia": "CN",
+    "EsquemaFamilia": "CANGILONES",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "D"
     ]
   }
 }

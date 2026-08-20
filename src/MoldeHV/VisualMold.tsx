@@ -8,7 +8,9 @@ import useAxios from "../Hooks/useAxios/IndexAx.js";
 import familiasSchema from "../assets/Schemas/familias.schema.json" with { type: "json" };
 import QRCode from "react-qr-code";
 import useToolImage from "../Hooks/useToolImage.js";
+import useToolPlano from "../Hooks/useToolPlano.js";
 import useToolQrCode from "../Hooks/useToolQrCode.js";
+import useToolManual from '../Hooks/useToolManual.js';
 
 
 
@@ -30,12 +32,29 @@ export default function VisualMold() {
     }, [id]);
 
     const { imageUrl } = useToolImage(toolData?.hesp_IdImagen);
-
+    const { planoUrl } = useToolPlano(toolData?.hesp_IdPlano);
+    const { manualUrl } = useToolManual(toolData?.hesp_IdManual);
     const [isOpen, setIsOpen] = useState(false);
 
     const familyInfo = toolData ? familiasSchema[toolData.codigo_familia as keyof typeof familiasSchema] : null;
 
     const qrCodeValue = useToolQrCode(toolData);
+
+    const handleOpenPlano = () => {
+        if (planoUrl) {
+            window.open(planoUrl, "_blank", "noopener,noreferrer");
+        } else {
+            alert("No hay un plano disponible para este herramental.");
+        }
+    };
+
+    const handleOpenManual = () => {
+        if (manualUrl) {
+            window.open(manualUrl, "_blank", "noopener,noreferrer");
+        } else {
+            alert("No hay un manual disponible para este herramental.");
+        }
+    };
 
     const handleDelete = (id: string) => {
         if (confirm("¿Está seguro de que desea eliminar este herramental?")) {
@@ -274,11 +293,14 @@ export default function VisualMold() {
                                     </p>
                                 </div>
                             </div>
-
-                            {/* Plan View Button - Positioned at bottom right of card */}
-                            <button className="btn btn-orange">
-                                Ver plano
-                            </button>
+                            <div className="mt-6 flex gap-4">
+                                <button className="btn btn-orange" onClick={handleOpenPlano}>
+                                    Ver plano
+                                </button>
+                                <button className="btn btn-orange" onClick={handleOpenManual}>
+                                    Ver manual
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

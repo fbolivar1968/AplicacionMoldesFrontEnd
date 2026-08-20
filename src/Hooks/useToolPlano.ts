@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import useAxios from './useAxios/IndexAx.js';
 
-const ImgHerrUrlBase = "http://10.1.1.14/media/imagenes/";
+const PlanoHerrUrlBase = "http://10.1.1.14/media/planos/";
 
-export default function useToolImage(idImagen: number | null | undefined) {
-    const [imageUrl, setImageUrl] = useState<string>("");
+export default function useToolPlano(idPlano: number | null | undefined) {
+    const [planoUrl, setPlanoUrl] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const { fetchData } = useAxios();
 
     useEffect(() => {
-        if (!idImagen) {
-            setImageUrl("");
+        if (!idPlano) {
+            setPlanoUrl("");
             return;
         }
 
@@ -20,19 +20,21 @@ export default function useToolImage(idImagen: number | null | undefined) {
             setLoading(true);
             try {
                 const resDoc = await fetchData({
-                    url: `/api/documents/${idImagen}/`
+                    url: `/api/documents/planos/${idPlano}/`
                 });
                 if (isMounted && resDoc && resDoc.archivo) {
                     const fileName = resDoc.archivo.split('/').pop() || "";
-                    setImageUrl(`${ImgHerrUrlBase}${fileName}`);
+                    setPlanoUrl(`${PlanoHerrUrlBase}${fileName}`);
                 }
             } catch (err) {
-                console.error("Error fetching tool image:", err);
+                console.error("Error fetching tool plano:", err);
             } finally {
                 if (isMounted) {
                     setLoading(false);
                 }
             }
+            console.log("planoUrl", planoUrl);
+            console.log("loading", loading);
         };
 
         loadDoc();
@@ -40,7 +42,7 @@ export default function useToolImage(idImagen: number | null | undefined) {
         return () => {
             isMounted = false;
         };
-    }, [idImagen, fetchData]);
+    }, [idPlano, fetchData]);
 
-    return { imageUrl, loading };
+    return { planoUrl, loading };
 }

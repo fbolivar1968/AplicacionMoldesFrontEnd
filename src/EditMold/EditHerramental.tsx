@@ -12,6 +12,8 @@ import DropDown from "../Components/DropDown";
 import familiasSchema from "../assets/Schemas/familias.schema.json" with { type: "json" };
 import FilesUpload from '../Components/FilesUpload';
 import useToolImage from "../Hooks/useToolImage.js";
+import useToolPlano from "../Hooks/useToolPlano.js";
+import useToolManual from "../Hooks/useToolManual.js";
 
 const EditHerramentalSchema = z.object({
     hesp_IdHerramental: z.coerce.number().int().min(1, "Requerido"),
@@ -144,8 +146,8 @@ export default function EditHerramental() {
     } = watched;
 
     const { imageUrl } = useToolImage(watched.hesp_IdImagen);
-    const { planoUrl } = useToolImage(watched.hesp_IdPlano);
-    const { manualUrl } = useToolImage(watched.hesp_IdManual);
+    const { planoUrl } = useToolPlano(watched.hesp_IdPlano);
+    const { manualUrl } = useToolManual(watched.hesp_IdManual);
 
     // Load tool details and dropdown data in parallel
     useEffect(() => {
@@ -794,6 +796,40 @@ export default function EditHerramental() {
                                     targetField="hesp_IdPlano"
                                     onUploadSuccess={(planoId) => {
                                         setValue("hesp_IdPlano", planoId, { shouldDirty: true });
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SECTION 7: Manual */}
+                    <section className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <span className="w-2 h-5 bg-[#003064] rounded-full inline-block"></span>
+                            Manuales de Herramental
+                        </h2>
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                            <div className="w-full max-w-[240px] sm:max-w-[280px] shrink-0 flex flex-col items-center">
+                                <span className="text-xs font-semibold text-gray-500 mb-2">Manual Actual</span>
+                                {manualUrl ? (
+                                    <img
+                                        src={manualUrl}
+                                        alt={generalData?.hesp_CodigoHerramental || "Manual de herramental"}
+                                        className="w-full aspect-[3/4] object-contain border border-gray-200 bg-gray-50 rounded-lg shadow-xs"
+                                    />
+                                ) : (
+                                    <img
+                                        src="./default-image.svg"
+                                        alt="Default"
+                                        className="w-full aspect-[3/4] object-cover border border-gray-200 bg-gray-50 rounded-lg shadow-xs"
+                                    />
+                                )}
+                            </div>
+                            <div className="w-full flex-1">
+                                <FilesUpload
+                                    targetField="hesp_IdManual"
+                                    onUploadSuccess={(manualId) => {
+                                        setValue("hesp_IdManual", manualId, { shouldDirty: true });
                                     }}
                                 />
                             </div>

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import useAxios from './useAxios/IndexAx.js';
 
-const ImgHerrUrlBase = "http://10.1.1.14/media/imagenes/";
+const ManualHerrUrlBase = "http://10.1.1.14/media/manuales/";
 
-export default function useToolImage(idImagen: number | null | undefined) {
-    const [imageUrl, setImageUrl] = useState<string>("");
+export default function useToolManual(idManual: number | null | undefined) {
+    const [manualUrl, setManualUrl] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const { fetchData } = useAxios();
 
     useEffect(() => {
-        if (!idImagen) {
-            setImageUrl("");
+        if (!idManual) {
+            setManualUrl("");
             return;
         }
 
@@ -20,14 +20,14 @@ export default function useToolImage(idImagen: number | null | undefined) {
             setLoading(true);
             try {
                 const resDoc = await fetchData({
-                    url: `/api/documents/${idImagen}/`
+                    url: `/api/documents/${idManual}/`
                 });
                 if (isMounted && resDoc && resDoc.archivo) {
                     const fileName = resDoc.archivo.split('/').pop() || "";
-                    setImageUrl(`${ImgHerrUrlBase}${fileName}`);
+                    setManualUrl(`${ManualHerrUrlBase}${fileName}`);
                 }
             } catch (err) {
-                console.error("Error fetching tool image:", err);
+                console.error("Error fetching tool manual:", err);
             } finally {
                 if (isMounted) {
                     setLoading(false);
@@ -40,7 +40,7 @@ export default function useToolImage(idImagen: number | null | undefined) {
         return () => {
             isMounted = false;
         };
-    }, [idImagen, fetchData]);
+    }, [idManual, fetchData]);
 
-    return { imageUrl, loading };
+    return { manualUrl, loading };
 }

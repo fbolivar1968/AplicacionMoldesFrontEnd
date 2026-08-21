@@ -20,7 +20,7 @@ export default function useToolManual(idManual: number | null | undefined) {
             setLoading(true);
             try {
                 const resDoc = await fetchData({
-                    url: `/api/documents/${idManual}/`
+                    url: `/api/documents/manuales/${idManual}/`
                 });
                 if (isMounted && resDoc && resDoc.archivo) {
                     const fileName = resDoc.archivo.split('/').pop() || "";

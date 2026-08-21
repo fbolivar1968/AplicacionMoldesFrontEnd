@@ -72,6 +72,7 @@ export default function CreateGnrlv1() {
             fa_NombreFamilia: formData.fa_NombreFamilia ?? "",
             fa_CodigoFamilia: formData.fa_CodigoFamilia ?? "",
             hesp_Criticidad: formData.hesp_Criticidad ?? "",
+
         }
     });
 
@@ -184,6 +185,8 @@ export default function CreateGnrlv1() {
     useEffect(() => {
         setValue("hesp_CodigoHerramental", HerramentalCode);
         console.log("Herramental Code", HerramentalCode)
+        console.log("Base Code Prefix", baseCodePrefix)
+        console.log("Next Consecutive", nextConsecutive)
     }, [HerramentalCode]);
 
     //Sync HerramentalCode whenever hesp_CodigoAlterno changes
@@ -309,7 +312,7 @@ export default function CreateGnrlv1() {
                         {/* <input type={"hidden"} {...register("hesp_CodigoHerramental")} value={HerramentalCode} /> */}
                         <div className="mt-4">
                             <h4 className="text-blueFB font-bold">Código Final:</h4>
-                            <h2 className="text-3xl font-mono">{baseCodePrefix}{nextConsecutive}</h2>
+                            <h2 className="text-3xl font-mono">{HerramentalCode}</h2>
                         </div>
                         {/* <input
                             type="number"

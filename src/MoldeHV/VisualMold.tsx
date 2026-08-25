@@ -149,7 +149,7 @@ export default function VisualMold() {
                                                 <div className="text-sm border border-gray-200">
                                                     <div className={`lightGrey p-3 space-y-1`}>
                                                         <p><strong>Descripción QR</strong></p>
-                                                        <p><strong>N° Molde:</strong> {toolData.hesp_IdHerramentalEspecifico}</p>
+                                                        <p><strong>Codigo Molde:</strong> {toolData.hesp_CodigoHerramental}</p>
                                                         <p><strong>Codigo Alterno:</strong> {toolData.hesp_CodigoAlterno}</p>
                                                         <p><strong>Tipo de Herramental:</strong>{toolData.nombre_tipo_herra}</p>
                                                         <p><strong>Familia:</strong> {toolData.nombre_familia}</p>

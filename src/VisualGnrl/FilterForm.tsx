@@ -12,11 +12,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 const FilterFormSchema = HerramentalModelSchema.pick({
     hesp_IdTipoHerramental: true,
     hesp_IdFamilia: true,
-    hesp_IdMaquinaPP: true,
+    num_maquina_pp: true,
     hesp_IdEstanteria: true,
     hesp_IdDieSet: true,
-    nombre_maquina_pp: true,
-    nombre_maquina_opc: true,
+    num_maquina_opc: true,
 });
 
 export default function FilterForm({
@@ -24,13 +23,15 @@ export default function FilterForm({
     setIsOpen: propSetIsOpen,
     globalFilter,
     setGlobalFilter,
-    onApplyFilters
+    onApplyFilters,
+    onResetFilters
 }: {
     isOpen?: boolean;
     setIsOpen?: (value: boolean) => void;
     globalFilter?: string;
     setGlobalFilter?: (value: string) => void;
     onApplyFilters?: (filters: any) => void;
+    onResetFilters?: () => void;
 }) {
     const { useGetLookups } = useHerramental();
     const selectId = useId();
@@ -49,18 +50,19 @@ export default function FilterForm({
     // 1. Get data for filters
     const { tipos, familias, maquinas, estanterias, dieSets } = useGetLookups();
 
-    const { handleSubmit, setValue } = useForm({
+    const { handleSubmit, setValue, reset, watch } = useForm({
         resolver: zodResolver(FilterFormSchema),
         defaultValues: {
             hesp_IdTipoHerramental: 0,
             hesp_IdFamilia: 0,
-            hesp_IdMaquinaPP: 0,
+            num_maquina_pp: 0,
             hesp_IdEstanteria: 0,
-            nombre_maquina_opc: "",
-            nombre_maquina_pp: "",
+            num_maquina_opc: 0,
             hesp_IdDieSet: 0,
         },
     });
+
+    const formValues = watch();
 
     // 2. Global loading state (optional)
     const isLoading = tipos.isLoading || familias.isLoading || maquinas.isLoading || estanterias.isLoading;
@@ -69,6 +71,26 @@ export default function FilterForm({
         console.log("Filtros Aplicados:", data);
         if (onApplyFilters) {
             onApplyFilters(data);
+        }
+    };
+
+    const handleReset = () => {
+        reset({
+            hesp_IdTipoHerramental: 0,
+            hesp_IdFamilia: 0,
+            num_maquina_pp: 0,
+            hesp_IdEstanteria: 0,
+            num_maquina_opc: 0,
+            hesp_IdDieSet: 0,
+        });
+        if (setGlobalFilter) {
+            setGlobalFilter('');
+        }
+        if (onApplyFilters) {
+            onApplyFilters({});
+        }
+        if (onResetFilters) {
+            onResetFilters();
         }
     };
 
@@ -98,7 +120,10 @@ export default function FilterForm({
                     {/* Ubicación / Estanterías */}
                     <div>
                         <label className="p-2 text-sm font-bold">Ubicación</label>
-                        <select onChange={(e) => setValue('hesp_IdEstanteria', Number(e.target.value))}>
+                        <select
+                            value={formValues.hesp_IdEstanteria || ''}
+                            onChange={(e) => setValue('hesp_IdEstanteria', Number(e.target.value))}
+                        >
                             <option value="">Estante</option>
                             {Array.isArray(estanterias.data) && estanterias.data.map((est: any) => (
                                 <option key={est.es_IdEstanteria} value={est.es_IdEstanteria}>
@@ -111,10 +136,13 @@ export default function FilterForm({
                     {/* Máquinas */}
                     <div>
                         <label className="block p-2 text-sm font-bold">N° máquina PP</label>
-                        <select onChange={(e) => setValue('hesp_IdMaquinaPP', Number(e.target.value))}>
+                        <select
+                            value={formValues.num_maquina_pp || ''}
+                            onChange={(e) => setValue('num_maquina_pp', Number(e.target.value))}
+                        >
                             <option value="">Seleccionar máquina</option>
                             {Array.isArray(maquinas.data) && maquinas.data.map((maq: any) => (
-                                <option key={maq.id} value={maq.id}>
+                                <option key={maq.id} value={maq.numero}>
                                     {maq.numero ?? `Máquina ${maq.numero}`}
                                 </option>
                             ))}
@@ -124,7 +152,10 @@ export default function FilterForm({
                     {/* DieSets */}
                     <div>
                         <label className="block p-2 text-sm font-bold">DieSet</label>
-                        <select onChange={(e) => setValue('hesp_IdDieSet', Number(e.target.value))}>
+                        <select
+                            value={formValues.hesp_IdDieSet || ''}
+                            onChange={(e) => setValue('hesp_IdDieSet', Number(e.target.value))}
+                        >
                             <option value="">Seleccionar DieSet</option>
                             {Array.isArray(dieSets.data) && dieSets.data.map((die: any) => (
                                 <option key={die.di_IdDieSet} value={die.di_IdDieSet}>
@@ -137,7 +168,10 @@ export default function FilterForm({
                     {/* Familia */}
                     <div>
                         <label className="block p-2 text-sm font-bold">Familia</label>
-                        <select onChange={(e) => setValue('hesp_IdFamilia', Number(e.target.value))}>
+                        <select
+                            value={formValues.hesp_IdFamilia || ''}
+                            onChange={(e) => setValue('hesp_IdFamilia', Number(e.target.value))}
+                        >
                             <option value="">Seleccionar familia</option>
                             {Array.isArray(familias.data) && familias.data.map((fam: any) => (
                                 <option key={fam.fa_IdFamilia} value={fam.fa_IdFamilia}>
@@ -150,7 +184,10 @@ export default function FilterForm({
                     {/* Tipos de Herramental */}
                     <div>
                         <label className="block p-2 text-sm font-bold">Tipo de Herramental</label>
-                        <select onChange={(e) => setValue('hesp_IdTipoHerramental', Number(e.target.value))}>
+                        <select
+                            value={formValues.hesp_IdTipoHerramental || ''}
+                            onChange={(e) => setValue('hesp_IdTipoHerramental', Number(e.target.value))}
+                        >
                             <option value="">Seleccionar tipo</option>
                             {tipos.data?.map((tipo: any) => (
                                 <option key={tipo.th_IdTipoHerramental} value={tipo.th_IdTipoHerramental}>
@@ -164,7 +201,7 @@ export default function FilterForm({
                         <button type="submit" className="btn btn-blue text-xs">Aplicar</button>
                         <button
                             type="button"
-                            onClick={() => window.location.reload()}
+                            onClick={handleReset}
                             className="btn btn-blue text-xs"
                         >
                             Limpiar

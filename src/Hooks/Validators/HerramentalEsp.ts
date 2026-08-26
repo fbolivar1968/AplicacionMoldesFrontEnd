@@ -6,6 +6,8 @@ export const HerramentalModelSchema = z.object({
     codigo: z.string().max(10),
     i: z.number().int().optional(),
     consecutive: z.number(),
+    num_maquina_pp: z.number().int().nullable().optional(),
+    num_maquina_opc: z.number().int().nullable().optional(),
 
 
 

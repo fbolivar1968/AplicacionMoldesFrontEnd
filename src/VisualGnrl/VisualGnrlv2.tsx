@@ -26,6 +26,11 @@ import Pagination from "@mui/material/Pagination";
 import useToolImage from "../Hooks/useToolImage.js";
 import useToolQrCode from "../Hooks/useToolQrCode.js";
 import QRCode from "react-qr-code";
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
+import React from 'react';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 
 
 export default function VisualGnrlv2() {
@@ -36,90 +41,121 @@ export default function VisualGnrlv2() {
     const [filters, setFilters] = useState<any>({});
     const isLoading = status === FETCH_STATUS.LOADING;
     const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
+
 
     useEffect(() => {
-        // Clean out default 0 values and empty/null values
-        const cleanParams = Object.keys(filters).reduce((acc, key) => {
-            const val = filters[key];
-            if (val !== 0 && val !== '' && val !== null && val !== undefined) {
-                acc[key] = val;
-            }
-            return acc;
-        }, {} as any);
+        try {
+            // Clean out default 0 values and empty/null values
+            const cleanParams = Object.keys(filters).reduce((acc, key) => {
+                const val = filters[key];
+                if (val !== 0 && val !== '' && val !== null && val !== undefined) {
+                    acc[key] = val;
+                }
+                return acc;
+            }, {} as any);
 
-        fetchData({
-            url: '/api/herramental_especifico/',
-            method: "GET",
-            params: cleanParams,
-        });
+            fetchData({
+                url: '/api/herramental_especifico/',
+                method: "GET",
+                params: cleanParams,
+            });
+        } catch (err) {
+            console.error("Error al solicitar datos:", err);
+            alert("Error al cargar los datos del servidor.");
+        }
     }, [filters, fetchData]);
 
     // Apply client-side filter fallback (ideal for mock testing and backend variations)
     const filteredData = useMemo(() => {
-        if (!response || !Array.isArray(response)) return [];
-        return response.filter((item: any) => {
-            // 1. Tipo de Herramental
-            if (filters.hesp_IdTipoHerramental) {
-                const selId = Number(filters.hesp_IdTipoHerramental);
-                const itemVal = item.hesp_IdTipoHerramental;
-                if (itemVal !== undefined && itemVal !== null) {
-                    if (Number(itemVal) !== selId) return false;
-                } else {
-                    const mockTiposMap: Record<number, string> = {
-                        1: "Troquel (T)",
-                        2: "Molde (M)",
-                        3: "Copa (C)"
-                    };
-                    if (item.nombre_tipo_herramental !== mockTiposMap[selId]) return false;
+        try {
+            if (!response || !Array.isArray(response)) return [];
+            return response.filter((item: any) => {
+                // 1. Tipo de Herramental
+                if (filters.hesp_IdTipoHerramental) {
+                    const selId = Number(filters.hesp_IdTipoHerramental);
+                    const itemVal = item.hesp_IdTipoHerramental;
+                    if (itemVal !== undefined && itemVal !== null) {
+                        if (Number(itemVal) !== selId) return false;
+                    } else {
+                        const mockTiposMap: Record<number, string> = {
+                            1: "Troquel (T)",
+                            2: "Molde (M)",
+                            3: "Copa (C)"
+                        };
+                        if (item.nombre_tipo_herramental !== mockTiposMap[selId]) return false;
+                    }
                 }
-            }
-            // 2. Familia
-            if (filters.hesp_IdFamilia) {
-                const selId = Number(filters.hesp_IdFamilia);
-                const itemVal = item.hesp_IdFamilia;
-                if (typeof itemVal === 'string') {
-                    const mockCodes: Record<string, number> = { "HX": 3, "CU": 4, "RE": 5 };
-                    if (mockCodes[itemVal] !== selId) return false;
-                } else if (itemVal !== undefined && itemVal !== null) {
-                    if (Number(itemVal) !== selId) return false;
+                // 2. Familia
+                if (filters.hesp_IdFamilia) {
+                    const selId = Number(filters.hesp_IdFamilia);
+                    const itemVal = item.hesp_IdFamilia;
+                    if (typeof itemVal === 'string') {
+                        const mockCodes: Record<string, number> = { "HX": 3, "CU": 4, "RE": 5 };
+                        if (mockCodes[itemVal] !== selId) return false;
+                    } else if (itemVal !== undefined && itemVal !== null) {
+                        if (Number(itemVal) !== selId) return false;
+                    } else {
+                        return false;
+                    }
                 }
-            }
-            // 3. Máquina PP
-            if (filters.hesp_IdMaquinaPP) {
-                const selId = Number(filters.hesp_IdMaquinaPP);
-                const itemVal = item.hesp_IdMaquinaPP;
-                if (itemVal !== undefined && itemVal !== null) {
-                    if (Number(itemVal) !== selId) return false;
-                } else {
-                    const mockMaquinasMap: Record<number, string> = { 1: "84", 2: "25", 3: "28" };
-                    if (item.nombre_maquina_pp !== mockMaquinasMap[selId]) return false;
+                // 3. Máquina PP
+                if (filters.num_maquina_pp) {
+                    const selId = Number(filters.num_maquina_pp);
+                    const itemVal = item.num_maquina_pp;
+                    if (itemVal !== undefined && itemVal !== null) {
+                        if (Number(itemVal) !== selId) return false;
+                    } else {
+                        return false;
+                    }
                 }
-            }
-            // 4. Estantería (Ubicación)
-            if (filters.hesp_IdEstanteria) {
-                const selId = Number(filters.hesp_IdEstanteria);
-                const itemVal = item.hesp_IdEstanteria;
-                if (itemVal !== undefined && itemVal !== null) {
-                    if (Number(itemVal) !== selId) return false;
-                } else {
-                    const mockEstanteriasMap: Record<number, string> = { 50: "A", 60: "B" };
-                    if (item.nombre_estanteria !== mockEstanteriasMap[selId]) return false;
+                // 4. Estantería (Ubicación)
+                if (filters.hesp_IdEstanteria) {
+                    const selId = Number(filters.hesp_IdEstanteria);
+                    const itemVal = item.hesp_IdEstanteria;
+                    if (itemVal !== undefined && itemVal !== null) {
+                        if (Number(itemVal) !== selId) return false;
+                    } else {
+                        return false;
+                    }
                 }
-            }
-            // 5. DieSet
-            if (filters.hesp_IdDieSet) {
-                const selId = Number(filters.hesp_IdDieSet);
-                const itemVal = item.hesp_IdDieSet;
-                if (itemVal !== undefined && itemVal !== null) {
-                    if (Number(itemVal) !== selId) return false;
-                } else {
-                    const mockDiesetsMap: Record<number, string> = { 1: "1500", 2: "1600", 3: "1700" };
-                    if (item.codigo_dieset !== mockDiesetsMap[selId]) return false;
+                // 5. DieSet
+                if (filters.hesp_IdDieSet) {
+                    const selId = Number(filters.hesp_IdDieSet);
+                    const itemVal = item.hesp_IdDieSet;
+                    if (itemVal !== undefined && itemVal !== null) {
+                        if (Number(itemVal) !== selId) return false;
+                    } else {
+                        return false;
+                    }
                 }
-            }
-            return true;
-        });
+                return true;
+            });
+        } catch (err) {
+            console.error("Error al filtrar:", err);
+            alert("Ocurrió un error al filtrar los herramentales.");
+            return [];
+        }
     }, [response, filters]);
+
+    // Track if any filter or search is active
+    const hasActiveFilters = useMemo(() => {
+        const hasGlobal = Boolean(globalFilter && globalFilter.trim() !== '');
+        const hasFormFilters = Boolean(
+            filters && Object.keys(filters).some(key => {
+                const val = filters[key];
+                return val !== 0 && val !== '' && val !== null && val !== undefined;
+            })
+        );
+        return hasGlobal || hasFormFilters;
+    }, [globalFilter, filters]);
+
+    const handleResetAllFilters = () => {
+        if (confirm("No se encontro ningun herramental con los filtros seleccionados.")) {
+            setGlobalFilter('');
+            setFilters({});
+        }
+    };
 
     //Define (Memoizing) Columns
     const columns = useMemo(() => [
@@ -133,7 +169,7 @@ export default function VisualGnrlv2() {
         },
         {
             header: 'machine',
-            accessorKey: 'nombre_maquina_pp',
+            accessorKey: 'num_maquina_pp',
         },
         {
             header: 'state',
@@ -190,6 +226,26 @@ export default function VisualGnrlv2() {
         getSortedRowModel: getSortedRowModel(),
     });
 
+    // Alert the user when search/filters yield no results
+    useEffect(() => {
+        try {
+            if (!isLoading && response && Array.isArray(response) && hasActiveFilters) {
+                const totalFound = table.getFilteredRowModel().rows.length;
+                if (totalFound === 0) {
+                    if (globalFilter && globalFilter.trim() !== '') {
+                        handleResetAllFilters();
+                        //alert(`No se encontró ningún herramental con el término "${globalFilter}".`);
+                    } else {
+                        handleResetAllFilters();
+                    }
+                }
+            }
+        } catch (err) {
+            console.error("Error al verificar los resultados de búsqueda:", err);
+            alert("Ocurrió un error al verificar los resultados de los filtros.");
+        }
+    }, [globalFilter, filters, response, isLoading, hasActiveFilters, table]);
+
 
     if (isLoading) {
         return <LoadingAnimation message="Moldes" />;
@@ -198,7 +254,7 @@ export default function VisualGnrlv2() {
 
     if (error) {
         const errorMessage = typeof error === 'object'
-            ? (error.detail || error.message || JSON.stringify(error))
+            ? (error.message || JSON.stringify(error))
             : String(error);
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-6 text-center">
@@ -238,6 +294,7 @@ export default function VisualGnrlv2() {
                         globalFilter={globalFilter}
                         setGlobalFilter={setGlobalFilter}
                         onApplyFilters={setFilters}
+                        onResetFilters={handleResetAllFilters}
                     />
                 </div>
 
@@ -251,30 +308,38 @@ export default function VisualGnrlv2() {
 
                     {/* RENDER THE LIST USING TANSTACK ROW MODEL */}
 
-                    <ul>
-                        {table.getRowModel().rows.map((row) => (
-                            <Molde
-                                key={row.original.hesp_IdHerramentalEspecifico}
-                                molde={row.original}
-                                onNavigate={() => navigate(`/VisualMold/${row.original.hesp_IdHerramentalEspecifico}`)}
-                            />
-                        ))}
-                    </ul>
+                    {table.getRowModel().rows.length > 0 ? (
+                        <>
+                            <ul>
+                                {table.getRowModel().rows.map((row) => (
+                                    <Molde
+                                        key={row.original.hesp_IdHerramentalEspecifico}
+                                        molde={row.original}
+                                        onNavigate={() => navigate(`/VisualMold/${row.original.hesp_IdHerramentalEspecifico}`)}
+                                    />
+                                ))}
+                            </ul>
 
-                    {/* MUI PAGINATION INTEGRATION */}
+                            {/* MUI PAGINATION INTEGRATION */}
 
-                    <div className="mt-8 flex justify-center pb-10">
-                        <Stack spacing={10}>
-                            <Pagination
-                                count={table.getPageCount()}
-                                page={table.getState().pagination.pageIndex + 1}
-                                onChange={(event, value) => table.setPageIndex(value - 1)}
-                                color="primary"
-                                variant="outlined"
-                                shape="rounded"
-                            />
-                        </Stack>
-                    </div>
+                            <div className="mt-8 flex justify-center pb-10">
+                                <Stack spacing={10}>
+                                    <Pagination
+                                        count={table.getPageCount()}
+                                        page={table.getState().pagination.pageIndex + 1}
+                                        onChange={(event, value) => table.setPageIndex(value - 1)}
+                                        color="primary"
+                                        variant="outlined"
+                                        shape="rounded"
+                                    />
+                                </Stack>
+                            </div>
+                        </>
+                    ) : (
+                        <div>
+                            <p>No hay datos para mostrar</p>
+                        </div>
+                    )}
                 </div>
             </div >
         </>
@@ -297,21 +362,55 @@ function TableImage({ idImagen }: { idImagen: number | null | undefined }) {
 
 function TableQrCode({ toolData }: { toolData: any }) {
     const qrCodeValue = useToolQrCode(toolData);
+    const [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="w-16 h-16 bg-white flex items-center justify-center border border-gray-300 rounded p-1">
-            <QRCode
-                value={qrCodeValue}
-                size={500}
-                style={{ height: "100%", maxWidth: "200%", width: "200%" }}
-            />
+
+        <div className="flex items-center space-x-4">
+            <button onClick={() => setIsOpen(true)}>
+                <QRCode
+                    value={qrCodeValue}
+                    size={80}
+                    style={{ height: "100%", maxWidth: "200%", width: "200%" }}
+                />
+            </button>
+            <React.Fragment>
+
+                <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+                    <DialogTitle>QR Code</DialogTitle>
+                    <DialogContent>
+                        <div className={`lightGrey p-3 space-y-1`}>
+                            <p><strong>Descripción QR</strong></p>
+                            <p><strong>Codigo Molde:</strong> {toolData.hesp_CodigoHerramental}</p>
+                            <p><strong>Codigo Alterno:</strong> {toolData.hesp_CodigoAlterno}</p>
+                            <p><strong>Tipo de Herramental:</strong>{toolData.nombre_tipo_herra}</p>
+                            <p><strong>Familia:</strong> {toolData.nombre_familia}</p>
+                            <p><strong>Maquina Principal:</strong> {toolData.num_maquina_pp}</p>
+                            <p><strong>Maquina Opcional:</strong> {toolData.num_maquina_opc}</p>
+                            <p><strong>Piso:</strong> {toolData.numero_piso}</p>
+                            <p><strong>Estante:</strong> {toolData.nombre_estanteria}</p>
+                            <p><strong>Fila:</strong> {toolData.numero_fila}</p>
+                            <p><strong>Columna:</strong> {toolData.numero_columna}</p>
+                            <p><strong>Posición:</strong> {toolData.numero_posicion}</p>
+                            <p><strong>Estado:</strong> {toolData.nombre_estado_Herr}</p>
+                            <p><strong>Cantidad de Herramental:</strong> {toolData.hesp_CantHerramental}</p>
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <button onClick={() => setIsOpen(false)} className="btn btn-blue">
+                            Cerrar
+                        </button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
         </div>
+
     );
 }
 
-function Molde({ molde, onNavigate }) {
+function Molde({ molde, onNavigate, }) {
     const { user } = useAuth();
     const { imageUrl } = useToolImage(molde.hesp_IdImagen);
-    const qrCodeValue = useToolQrCode(molde);
+
 
     return (
         <li className="molde-list-item" >
@@ -327,20 +426,17 @@ function Molde({ molde, onNavigate }) {
             <div className="col-start-3 row-start-1 row-end-5" onClick={onNavigate} style={{ cursor: 'pointer' }}>
                 <h3 className="col-start-3 row-start-1 justify-self-start">{molde.hesp_CodigoHerramental}</h3>
                 <p className="col-start-3 row-start-2 row-end-3 justify-self-start bg-blue-50">Estado: {molde.nombre_estado_Herr} </p>
-                <p className="col-start-3 row-start-3 row-end-4 justify-self-start bg-blue-50">Máquina: {molde.nombre_maquina_pp} </p>
+                <p className="col-start-3 row-start-3 row-end-4 justify-self-start bg-blue-50">Máquina: {molde.num_maquina_pp} </p>
                 <p className="col-start-3 row-start-4 row-end-5 justify-self-start bg-blue-50">Código alterno: {molde.hesp_CodigoAlterno} </p>
 
             </div>
 
-
-
             <div className="col-start-2 row-span-5 self-center justify-self-center w-auto h-auto bg-white flex items-center justify-center border border-gray-300 rounded  shadow-sm m-2">
-                <QRCode
-                    value={qrCodeValue}
-                    size={200}
-                    style={{ height: "100%", maxWidth: "100%", width: "100%" }}
-                />
+
+                <TableQrCode toolData={molde} />
             </div>
+
+
 
             {user && user.user_type !== 3 && (
                 <div className="col-start-5 row-span-2 bg-blue-50 ">

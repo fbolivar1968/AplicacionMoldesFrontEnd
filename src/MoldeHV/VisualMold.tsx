@@ -11,6 +11,10 @@ import useToolImage from "../Hooks/useToolImage.js";
 import useToolPlano from "../Hooks/useToolPlano.js";
 import useToolQrCode from "../Hooks/useToolQrCode.js";
 import useToolManual from '../Hooks/useToolManual.js';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 
@@ -143,35 +147,40 @@ export default function VisualMold() {
                                     />
                                 </button>
                                 <React.Fragment>
-                                    {isOpen && (
+                                    <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
                                         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                                             <div className="bg-white p-6 rounded-lg shadow-lg">
                                                 <div className="text-sm border border-gray-200">
                                                     <div className={`lightGrey p-3 space-y-1`}>
-                                                        <p><strong>Descripción QR</strong></p>
-                                                        <p><strong>Codigo Molde:</strong> {toolData.hesp_CodigoHerramental}</p>
-                                                        <p><strong>Codigo Alterno:</strong> {toolData.hesp_CodigoAlterno}</p>
-                                                        <p><strong>Tipo de Herramental:</strong>{toolData.nombre_tipo_herra}</p>
-                                                        <p><strong>Familia:</strong> {toolData.nombre_familia}</p>
-                                                        <p><strong>Maquina Principal:</strong> {toolData.num_maquina_pp}</p>
-                                                        <p><strong>Maquina Opcional:</strong> {toolData.num_maquina_opc}</p>
-                                                        <p><strong>Piso:</strong> {toolData.numero_piso}</p>
-                                                        <p><strong>Estante:</strong> {toolData.nombre_estanteria}</p>
-                                                        <p><strong>Fila:</strong> {toolData.numero_fila}</p>
-                                                        <p><strong>Columna:</strong> {toolData.numero_columna}</p>
-                                                        <p><strong>Posición:</strong> {toolData.numero_posicion}</p>
-                                                        <p><strong>Estado:</strong> {toolData.nombre_estado_Herr}</p>
-                                                        <p><strong>Cantidad de Herramental:</strong> {toolData.hesp_CantHerramental}</p>
+                                                        <DialogTitle>Descripción QR</DialogTitle>
+                                                        <DialogContent>
+                                                            <p><strong>Codigo Molde:</strong> {toolData.hesp_CodigoHerramental}</p>
+                                                            <p><strong>Codigo Alterno:</strong> {toolData.hesp_CodigoAlterno}</p>
+                                                            <p><strong>Tipo de Herramental:</strong>{toolData.nombre_tipo_herra}</p>
+                                                            <p><strong>Familia:</strong> {toolData.nombre_familia}</p>
+                                                            <p><strong>Maquina Principal:</strong> {toolData.num_maquina_pp}</p>
+                                                            <p><strong>Maquina Opcional:</strong> {toolData.num_maquina_opc}</p>
+                                                            <p><strong>Piso:</strong> {toolData.numero_piso}</p>
+                                                            <p><strong>Estante:</strong> {toolData.nombre_estanteria}</p>
+                                                            <p><strong>Fila:</strong> {toolData.numero_fila}</p>
+                                                            <p><strong>Columna:</strong> {toolData.numero_columna}</p>
+                                                            <p><strong>Posición:</strong> {toolData.numero_posicion} no</p>
+                                                            <p><strong>Estado:</strong> {toolData.nombre_estado_Herr}</p>
+                                                            <p><strong>Cantidad de Herramental:</strong> {toolData.hesp_CantHerramental}</p>
+                                                        </DialogContent>
                                                     </div>
                                                 </div>
-
-                                                <button onClick={() => setIsOpen(false)} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-                                                    Cerrar
-                                                </button>
+                                                <DialogActions>
+                                                    <button onClick={() => setIsOpen(false)} className="btn btn-blue">
+                                                        Cerrar
+                                                    </button>
+                                                </DialogActions>
                                             </div>
                                         </div>
-                                    )}
+                                    </Dialog>
                                 </React.Fragment>
+
+
                                 {/* QR Description */}
 
                             </div>

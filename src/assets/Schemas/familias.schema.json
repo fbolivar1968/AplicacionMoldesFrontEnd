@@ -168,6 +168,19 @@
       "Q"
     ]
   },
+  "APT": {
+    "Familia": "ANCLAJE PLATINA",
+    "CodFamilia": "APT",
+    "EsquemaFamilia": "ANCLAJE PLATINA",
+    "Literals": [
+      "A",
+      "B",
+      "C",
+      "E",
+      "P",
+      "L"
+    ]
+  },
   "AV": {
     "Familia": "AVELLANADORANURADO",
     "CodFamilia": "AV",

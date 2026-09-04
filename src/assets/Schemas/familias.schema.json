@@ -85,7 +85,11 @@
     "Familia": "CILINDRICO",
     "CodFamilia": "CL",
     "EsquemaFamilia": "CILINDRICO",
-    "Literals": []
+    "Literals": [
+      "A",
+      "B",
+      "E"
+    ]
   },
   "TET": {
     "Familia": "TLLO EN T",

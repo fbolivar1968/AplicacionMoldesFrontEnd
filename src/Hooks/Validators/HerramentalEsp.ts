@@ -43,7 +43,7 @@ export const HerramentalModelSchema = z.object({
 
     // Herramental
     he_IdHerramental: z.coerce.number().min(1, "Debe seleccionar un herramental"),
-    he_NombreHerramental: z.string().max(15),
+    he_NombreHerramental: z.string().max(30),
     he_CodigoHerramental: z.string().max(10),
 
     // Herramental Type
@@ -53,7 +53,7 @@ export const HerramentalModelSchema = z.object({
     //Family
     fa_IdFamilia: z.coerce.number().min(1, "Debe seleccionar una familia"),
     fa_CodigoFamilia: z.string().max(4).optional(),
-    fa_NombreFamilia: z.string().max(15),
+    fa_NombreFamilia: z.string().max(30),
 
 
 
@@ -64,7 +64,7 @@ export const HerramentalModelSchema = z.object({
     hesp_IdFamilia: z.coerce.number().int(),
     hesp_IdEstadoHerr: z.number().int(),
     hesp_IdMaquinaPP: z.number().int(),
-    nombre_familia: z.string().max(15),
+    nombre_familia: z.string().max(30),
     nombre_maquina_pp: z.string().max(30),
     nombre_maquina_opc: z.string().max(30).optional(),
     nombre_actividad: z.string().max(30).optional(),

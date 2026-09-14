@@ -228,9 +228,41 @@ export function CreateUbic() {
             } else {
                 alert("Herramental creado pero no se encontró un ID en la respuesta. ¡Verifica la consola!");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error creating herramental:", error);
+            const serverMsg = typeof error === 'string'
+                ? error
+                : error?.message || (typeof error === 'object' ? Object.entries(error).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`).join('\n') : "Error desconocido");
+            alert(`Error al crear el herramental:\n\n${serverMsg}`);
         }
+    };
+
+    const FIELD_LABELS: Record<string, string> = {
+        hesp_IdMaquinaPP: "N° máquina PP",
+        hesp_IdMaquinaOpc: "N° máquina Opc",
+        hesp_IdPiso: "Piso",
+        hesp_IdEstanteria: "Estante",
+        uh_NumeroColumna: "Columna",
+        uh_NumeroFila: "Fila",
+        uh_NumeroPosicion: "Posición",
+        hesp_IdDieSet: "DieSet",
+        hesp_IdEstadoHerr: "Estado",
+        hesp_IdActividad: "Actividad Pendiente",
+        hesp_CantHerramental: "Existencia",
+        hesp_Observacion: "Observaciones",
+    };
+
+    const onInvalidSubmit = (formErrors: Record<string, any>) => {
+        console.log("Validation errors:", formErrors);
+        const errorList = Object.entries(formErrors).map(([field, err]) => {
+            const label = FIELD_LABELS[field] || field;
+            const message = err?.message || "Campo requerido o inválido";
+            return `• ${label}: ${message}`;
+        });
+
+        alert(
+            `No se puede finalizar. Faltan campos requeridos o tienen valores inválidos:\n\n${errorList.join("\n")}`
+        );
     };
 
     return (
@@ -238,7 +270,7 @@ export function CreateUbic() {
             <NavBar />
             <h1>Ubicación</h1>
 
-            <form onSubmit={handleSubmit(onFinalSubmit, (formErrors) => console.log("Validation errors:", formErrors))}>
+            <form onSubmit={handleSubmit(onFinalSubmit, onInvalidSubmit)}>
                 <div className="grid grid-cols-[3,fr] grid-rows-[(5,5,5,2)] gap-4 w-screen h-screen m-5">
                     <div className="grid p-2 col-span-2 row-start-1 card-form">
                         <div className="col-start-1 row-start-1">

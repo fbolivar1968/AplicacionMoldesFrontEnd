@@ -361,7 +361,7 @@ function TableImage({ idImagen }: { idImagen: number | null | undefined }) {
 }
 
 function TableQrCode({ toolData }: { toolData: any }) {
-    const qrCodeValue = useToolQrCode(toolData);
+    const { qrCodeValue, displayedText } = useToolQrCode(toolData);
     const [isOpen, setIsOpen] = useState(false);
     return (
 
@@ -380,19 +380,7 @@ function TableQrCode({ toolData }: { toolData: any }) {
                     <DialogContent>
                         <div className={`lightGrey p-3 space-y-1`}>
                             <p><strong>Descripción QR</strong></p>
-                            <p><strong>Codigo Molde:</strong> {toolData.hesp_CodigoHerramental}</p>
-                            <p><strong>Codigo Alterno:</strong> {toolData.hesp_CodigoAlterno}</p>
-                            <p><strong>Tipo de Herramental:</strong>{toolData.nombre_tipo_herra}</p>
-                            <p><strong>Familia:</strong> {toolData.nombre_familia}</p>
-                            <p><strong>Maquina Principal:</strong> {toolData.num_maquina_pp}</p>
-                            <p><strong>Maquina Opcional:</strong> {toolData.num_maquina_opc}</p>
-                            <p><strong>Piso:</strong> {toolData.numero_piso}</p>
-                            <p><strong>Estante:</strong> {toolData.nombre_estanteria}</p>
-                            <p><strong>Fila:</strong> {toolData.numero_fila}</p>
-                            <p><strong>Columna:</strong> {toolData.numero_columna}</p>
-                            <p><strong>Posición:</strong> {toolData.numero_posicion}</p>
-                            <p><strong>Estado:</strong> {toolData.nombre_estado_Herr}</p>
-                            <p><strong>Cantidad de Herramental:</strong> {toolData.hesp_CantHerramental}</p>
+                            {displayedText}
                         </div>
                     </DialogContent>
                     <DialogActions>

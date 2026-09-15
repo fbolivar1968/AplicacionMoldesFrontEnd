@@ -24,12 +24,12 @@ theme = createTheme(theme, {
 export default function Search({ globalFilter, setGlobalFilter }) {
     return (
         <ThemeProvider theme={theme}>
-            <div className="flex-row inline-flex items-center mb-5 mt-5">
+            <div className={`flex-row items-center mb-5 mt-5 w-auto`}>
                 <input
                     value={globalFilter ?? ''}
                     onChange={e => setGlobalFilter(e.target.value)}
                     placeholder="Busca por palabra clave"
-                    className=" border-light-greyFB bg-white rounded-sm border-2 w-auto">
+                    className=" border-light-greyFB bg-white rounded-sm border-2 sm:w-auto">
                 </input>
             </div>
         </ThemeProvider>

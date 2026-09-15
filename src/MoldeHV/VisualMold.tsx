@@ -15,6 +15,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Button } from "../Components/Button.js";
 
 
 
@@ -88,13 +89,13 @@ export default function VisualMold() {
                     </h1>
                     {user && user.user_type !== 3 && (
                         <div className="">
-                            <button className="btn btn-orange" onClick={() => navigate(`/EditHerramental/${id}`)}>
+                            <Button variant="primary" onClick={() => navigate(`/EditHerramental/${id}`)}>
                                 Editar
-                            </button>
+                            </Button>
 
-                            <button className="flex flex-col btn btn-blue" onClick={() => handleDelete(id)}>
+                            {/* <button className="flex flex-col btn btn-blue" onClick={() => handleDelete(id)}>
                                 Eliminar Herramental
-                            </button>
+                            </button> */}
                         </div>
                     )}
                 </div>
@@ -291,12 +292,12 @@ export default function VisualMold() {
                                 </div>
                             </div>
                             <div className="mt-6 flex gap-4">
-                                <button className="btn btn-orange" onClick={handleOpenPlano}>
+                                <Button variant="primary" onClick={handleOpenPlano}>
                                     Ver plano
-                                </button>
-                                <button className="btn btn-orange" onClick={handleOpenManual}>
+                                </Button>
+                                <Button variant="primary" onClick={handleOpenManual}>
                                     Ver manual
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>

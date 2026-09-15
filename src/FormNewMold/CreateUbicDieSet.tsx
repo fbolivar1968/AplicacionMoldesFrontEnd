@@ -12,6 +12,7 @@ import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { z } from "zod";
 import schemeDieSet from "../assets/Schemas/DieSetSchema.png";
 import defaultScheme from "../assets/Schemas/default-scheme.png";
+import { Button } from "../Components/Button.js";
 
 type DropdownItem = {
     id?: number;
@@ -302,19 +303,21 @@ export function CreateUbicDieSet() {
 
                     {/* Form Buttons */}
                     <div className="flex justify-between items-center pt-6 border-t">
-                        <button
+                        <Button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="btn btn-orange"
+                            variant="primary"
                         >
                             Volver
-                        </button>
+                        </Button>
 
-                        <button type="submit"
+                        <Button
+                            type="submit"
+                            variant="primary"
                             disabled={!canContinue}
-                            className={`btn ${canContinue ? 'btn-orange' : 'bg-gray-400 cursor-not-allowed'}`}>
+                        >
                             Guardar DieSet
-                        </button>
+                        </Button>
 
                     </div>
                 </form>

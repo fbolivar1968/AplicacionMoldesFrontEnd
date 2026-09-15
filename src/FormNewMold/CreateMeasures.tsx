@@ -2,12 +2,11 @@ import * as React from "react";
 import NavBar from "../Components/NavBar.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import '../styles/globals.css'
-//import FileUploader from "../Components/FileUploader.js";
-import FilesUpload from "../Components/FilesUpload.jsx";
+import FilesUpload from "../Components/FilesUpload.js";
 import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { useMeasuresForm } from "../Hooks/useMeasuresForm.js";
 import defaultScheme from "../assets/Schemas/default-scheme.png"
-
+import { Button } from "../Components/Button.js";
 
 export default function CreateMeasures() {
     const { formData, updateFormData } = useFormData();
@@ -95,15 +94,17 @@ export default function CreateMeasures() {
 
                 {/*-----------------Buttons---------------------------------------- */}
                 <div className="col-span-2 flex justify-between mt-10">
-                    <button type="button" onClick={() => navigate(-1)} className="btn btn-orange">
+                    <Button variant="primary" onClick={() => navigate(-1)}>
                         Atrás
-                    </button>
+                    </Button>
 
-                    <button type="submit"
+                    <Button
+                        type="submit"
+                        variant="primary"
                         disabled={!canContinue}
-                        className={`btn ${canContinue ? 'btn-orange' : 'bg-gray-400 cursor-not-allowed'}`}>
+                    >
                         Continuar
-                    </button>
+                    </Button>
                 </div>
             </form>
         </>

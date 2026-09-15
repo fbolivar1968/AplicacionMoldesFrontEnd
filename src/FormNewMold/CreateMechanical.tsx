@@ -9,6 +9,7 @@ import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { useEffect } from "react";
 import useAxios from "../Hooks/useAxios/IndexAx.js";
 import FilesUpload from "../Components/FilesUpload.js";
+import { Button } from "../Components/Button.js";
 
 export default function CreateMechanical() {
     const { formData, updateFormData } = useFormData();
@@ -173,16 +174,16 @@ export default function CreateMechanical() {
                 </div>
 
                 <div className="col-span-1 md:col-span-2 flex justify-between mt-4">
-                    <button type="button" className="btn btn-orange" onClick={() => navigate(-1)}>
+                    <Button type="button" variant="primary" onClick={() => navigate(-1)}>
                         Atrás
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                         type="submit"
-                        className="btn btn-orange"
+                        variant="primary"
                     >
                         Continuar
-                    </button>
+                    </Button>
                 </div>
             </form>
         </>

@@ -103,8 +103,10 @@ export default function FilesUpload({
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
         onDrop,
         disabled: uploading,
-        Accept: accept || '',
+        accept: accept || undefined,
         maxFiles: maxFiles ?? 1,
+        noClick: true,
+        noKeyboard: true,
     });
 
     const handleUpload = async (e?: React.MouseEvent) => {
@@ -334,7 +336,7 @@ function FileItem({ file, onRemove, uploading }: FileItemProps) {
                     </div>
                 </div>
                 {!uploading && (
-                    <button onClick={() => onRemove(file.id)} className="text-gray-500 hover:text-gray-700">
+                    <button type="button" onClick={() => onRemove(file.id)} className="text-gray-500 hover:text-gray-700">
                         <X size={16} className={"text-white"} />
                     </button>
                 )}

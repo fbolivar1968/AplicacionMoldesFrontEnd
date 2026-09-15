@@ -9,6 +9,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import LoadingAnimation from "../Components/LoadingAnimation.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext.js";
+import { Button } from '../Components/Button.js';
 //***********************************************************
 
 import useAxios from "../Hooks/useAxios/IndexAx.js";
@@ -41,7 +42,7 @@ export default function VisualGnrlv2() {
     const [filters, setFilters] = useState<any>({});
     const isLoading = status === FETCH_STATUS.LOADING;
     const navigate = useNavigate();
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
 
     useEffect(() => {
@@ -279,6 +280,8 @@ export default function VisualGnrlv2() {
                     >
                         Reintentar
                     </button>
+
+
                 </div>
             </div>
         );
@@ -287,18 +290,20 @@ export default function VisualGnrlv2() {
     return (
         <>
             <NavBar />
-            <div className="grid grid-cols-[0.45fr_1.9fr]">
+            <div className="relative min-h-screen">
 
-                <div>
-                    <FilterForm
-                        globalFilter={globalFilter}
-                        setGlobalFilter={setGlobalFilter}
-                        onApplyFilters={setFilters}
-                        onResetFilters={handleResetAllFilters}
-                    />
-                </div>
+                <FilterForm
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                    onApplyFilters={setFilters}
+                    onResetFilters={handleResetAllFilters}
+                />
 
-                <div className="ml-7 mt-0  ">
+
+                {/* Main content shifts to the right when FilterForm opens */}
+                <div className={`transition-all duration-300 ease-in-out p-4 ${isOpen ? 'ml-72' : 'ml-12'}`}>
                     {user && user.user_type !== 3 && (
                         <Link to="/CreateGnrlv1">
                             <button className="btn btn-blue">Nuevo molde</button>
@@ -365,7 +370,7 @@ function TableQrCode({ toolData }: { toolData: any }) {
     const [isOpen, setIsOpen] = useState(false);
     return (
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 flex-col lg:flex-row">
             <button onClick={() => setIsOpen(true)}>
                 <QRCode
                     value={qrCodeValue}
@@ -419,7 +424,7 @@ function Molde({ molde, onNavigate, }) {
 
             </div>
 
-            <div className="col-start-2 row-span-5 self-center justify-self-center w-auto h-auto bg-white flex items-center justify-center border border-gray-300 rounded  shadow-sm m-2">
+            <div className="col-start-2 row-span-5 self-center justify-self-center w-auto h-auto bg-white flex items-center justify-center border border-gray-300 rounded  shadow-sm m-2 lg:block">
 
                 <TableQrCode toolData={molde} />
             </div>
@@ -427,18 +432,26 @@ function Molde({ molde, onNavigate, }) {
 
 
             {user && user.user_type !== 3 && (
-                <div className="col-start-5 row-span-2 bg-blue-50 ">
+                <div className="col-start-5 row-span-2 bg-blue-50 flex items-center justify-end">
                     <Link to={`/CreateActivity/${molde.hesp_IdHerramentalEspecifico}`}>
-                        <button className='p-2 mx-2 rounded-full hover:bg-blueFB/20'>
+                        <Button
+                            className='p-2 mx-1 sm:mx-2 rounded-full hover:bg-blueFB/20 inline-flex items-center justify-center'
+                            aria-label="Crear actividad"
+                            variant="ghost"
+                        >
                             <ChecklistIcon />
-                        </button>
+                        </Button>
                     </Link>
 
                     {/* Agrega el botón de editar con el icono */}
                     <Link to={`/EditHerramental/${molde.hesp_IdHerramentalEspecifico}`}>
-                        <button className='p-2 mx-2 rounded-full hover:bg-blueFB/20'>
+                        <Button
+                            className='p-2 mx-1 sm:mx-2 rounded-full hover:bg-blueFB/20 inline-flex items-center justify-center'
+                            aria-label="Editar molde"
+                            variant="ghost"
+                        >
                             <ModeEditIcon sx={{ color: blue[500], cursor: 'pointer' }} />
-                        </button>
+                        </Button>
                     </Link>
                 </div>
             )}

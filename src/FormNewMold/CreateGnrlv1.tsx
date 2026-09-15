@@ -12,6 +12,7 @@ import LoadingAnimation from "../Components/LoadingAnimation.jsx";
 import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { z } from "zod";
 import { useState } from "react";
+import { Button } from "../Components/Button.js";
 
 //pick Validator variables in this form
 const HerramentalValuesSchema = HerramentalModelSchema.pick(
@@ -295,7 +296,7 @@ export default function CreateGnrlv1() {
                 </div>
 
 
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-gray-50 p-6 rounded-lg hidden lg:block">
                     <h3 className="font-bold"> Descripción</h3>
                     <p className=" uppercase text-sm mb-4">{description}</p>
 
@@ -325,14 +326,22 @@ export default function CreateGnrlv1() {
 
                 </div>
 
-                <div className="col-span-2 flex justify-between mt-10">
-                    <button type="button" onClick={() => navigate(-1)} className="btn btn-orange">
+                <div className="col-span-2 inline-flex justify-between mt-10 md:flex">
+                    <Button
+                        onClick={() => navigate(-1)}
+                        className="btn btn-orange"
+                        variant="primary"
+                    >
                         Atrás
-                    </button>
+                    </Button>
 
-                    <button type="submit" className="btn btn-orange">
+                    <Button
+                        type="submit"
+                        className="btn btn-orange"
+                        variant="primary"
+                    >
                         Continuar
-                    </button>
+                    </Button>
                 </div>
 
             </form>

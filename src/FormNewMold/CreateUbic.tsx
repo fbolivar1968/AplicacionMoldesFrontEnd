@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useBlocker } from "react-router-dom";
 import { useFormData } from "../Hooks/FormNewHerrContext/HerrContext.js";
 import { z } from "zod";
+import { Button } from "../Components/Button.js";
 
 type DropdownItem = {
     id?: number;
@@ -203,7 +204,7 @@ export function CreateUbic() {
                     const resProp = await CreatePost("/api/propiedad_herramental/", "POST", propPayload);
                     propiedadHerramentalId = resProp?.ph_IdPropiedadHerramental || resProp?.id || resProp?.data?.ph_IdPropiedadHerramental;
                 } catch (errProp) {
-                    console.warn("Could not create PropiedadHerramental on final submit:", errProp);
+                    alert("Could not create PropiedadHerramental on final submit:", errProp);
                 }
             }
 
@@ -392,13 +393,13 @@ export function CreateUbic() {
                 </div>
                 <div className="col-span-3 flex justify-between m-8">
 
-                    <button type="button" className="btn btn-orange" onClick={() => navigate(-1)}>
+                    <Button type="button" variant="primary" onClick={() => navigate(-1)}>
                         Atrás
-                    </button>
+                    </Button>
 
-                    <button type="submit" className="btn btn-orange">
+                    <Button type="submit" variant="primary">
                         Finalizar
-                    </button>
+                    </Button>
                 </div>
             </form>
         </>

@@ -18,24 +18,90 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    // 3 days in milliseconds: 3 * 24 * 60 * 60 * 1000 = 259,200,000 ms
+    const INACTIVITY_TIMEOUT_MS = 3 * 24 * 60 * 60 * 1000;
+
+    const clearSession = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('last_activity');
+        setToken(null);
+        setUser(null);
+    };
+
+    const updateLastActivity = () => {
+        if (localStorage.getItem('token')) {
+            localStorage.setItem('last_activity', Date.now().toString());
+        }
+    };
+
     useEffect(() => {
-        // Load initial session on mount
+        // Load initial session on mount and check expiration
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
+        const lastActivityStr = localStorage.getItem('last_activity');
+        const now = Date.now();
+
+        if (storedToken && lastActivityStr) {
+            const lastActivity = parseInt(lastActivityStr, 10);
+            if (isNaN(lastActivity) || now - lastActivity > INACTIVITY_TIMEOUT_MS) {
+                clearSession();
+                setLoading(false);
+                return;
+            }
+        }
+
         if (storedUser) {
             try {
                 const parsedUser = JSON.parse(storedUser) as User;
                 parsedUser.user_type = mapRoleToType(parsedUser.user_type ?? parsedUser.role);
                 setToken(storedToken || 'session_active');
                 setUser(parsedUser);
+                // Refresh activity on active load
+                localStorage.setItem('last_activity', now.toString());
             } catch (err) {
                 console.error("Failed to parse stored user session", err);
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
+                clearSession();
             }
+        } else if (storedToken) {
+            clearSession();
         }
         setLoading(false);
     }, []);
+
+    useEffect(() => {
+        if (!token) return;
+
+        // Periodic timer every minute to check if 3 days have elapsed without activity
+        const intervalId = setInterval(() => {
+            const lastActivityStr = localStorage.getItem('last_activity');
+            if (lastActivityStr) {
+                const lastActivity = parseInt(lastActivityStr, 10);
+                if (!isNaN(lastActivity) && Date.now() - lastActivity > INACTIVITY_TIMEOUT_MS) {
+                    clearSession();
+                }
+            }
+        }, 60 * 1000);
+
+        // Update last activity on user interactions (throttled)
+        let lastLogged = 0;
+        const handleUserActivity = () => {
+            const now = Date.now();
+            // Throttle storage writes to at most once every 30 seconds
+            if (now - lastLogged > 30 * 1000) {
+                lastLogged = now;
+                updateLastActivity();
+            }
+        };
+
+        const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+        events.forEach((event) => window.addEventListener(event, handleUserActivity, { passive: true }));
+
+        return () => {
+            clearInterval(intervalId);
+            events.forEach((event) => window.removeEventListener(event, handleUserActivity));
+        };
+    }, [token]);
     const login = async (us_User: string, us_Password: string) => {
         setLoading(true);
         setError(null);
@@ -59,6 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Persistir sesión con el token de acceso
             localStorage.setItem('token', receivedToken);
             localStorage.setItem('user', JSON.stringify(mappedUser));
+            localStorage.setItem('last_activity', Date.now().toString());
             setToken(receivedToken);
             setUser(mappedUser);
         } catch (err: any) {
@@ -72,10 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     const logout = () => {
         AuthService.logout();
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setToken(null);
-        setUser(null);
+        clearSession();
         setError(null);
     };
     const isAuthenticated = !!token || !!user;

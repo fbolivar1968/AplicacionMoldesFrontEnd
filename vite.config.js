@@ -7,13 +7,16 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(),
-    tailwindcss()
+  tailwindcss()
     //mkcert()  // ← Enables HTTPS locally
   ],
 
   server: {
     host: true,
-    port: 5174
+    port: 5174,
+    allowedHosts: [
+      'ghfb.forjasbolivar.com'
+    ]
   },
 
   css: {

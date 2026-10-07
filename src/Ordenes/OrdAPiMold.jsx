@@ -38,6 +38,22 @@ export default function Orders() {
         });
     }, []);
 
+
+
+//Funtion to recover OP PDF
+    const handlePedidoClick = async (consecutivo) => {
+        const res = await apiClient.get(
+            `/api/op-pdf/${consecutivo}/`
+        );
+        window.open(
+            res.data.url,
+            "_blank"
+        );
+    };
+
+
+
+
     // Function to recover herramental_especifico ID from hesp_CodigoHerramental
     const handleHerramentalClick = async (codigoHerramental) => {
         if (!codigoHerramental) return;
@@ -100,6 +116,21 @@ export default function Orders() {
         {
             header: 'Cons. OP',
             accessorKey: 'consecutivo_op',
+            cell: ({ getValue }) => {
+                const code = getValue();
+                if (!code) return '-';
+                const isNavigating = navigatingCode === code;
+                return (
+                    <button
+                        onClick={() => handlePedidoClick(code)}
+                        disabled={isNavigating}
+                        className="text-blueFB hover:underline font-semibold cursor-pointer text-left focus:outline-none disabled:opacity-50"
+                        title={`Ver orden ${code}`}
+                    >
+                        {isNavigating ? `${code}...` : code}
+                    </button>
+                );
+            }
         },
         {
             header: 'Fecha Inicio',

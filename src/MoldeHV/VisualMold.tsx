@@ -93,9 +93,9 @@ export default function VisualMold() {
                                 Editar
                             </Button>
 
-                            {/* <button className="flex flex-col btn btn-blue" onClick={() => handleDelete(id)}>
+                            <button className="flex flex-col btn btn-blue" onClick={() => handleDelete(id)}>
                                 Eliminar Herramental
-                            </button> */}
+                            </button> 
                         </div>
                     )}
                 </div>

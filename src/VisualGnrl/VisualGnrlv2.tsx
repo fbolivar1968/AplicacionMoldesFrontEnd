@@ -191,7 +191,11 @@ export default function VisualGnrlv2() {
                 const toolData = row.original;
                 return <TableQrCode toolData={toolData} />;
             }
-        }
+        },
+
+        { 
+            header: "Codigo Alterno", 
+            accessorKey: "hesp_CodigoAlterno" },      
 
     ], []);
 

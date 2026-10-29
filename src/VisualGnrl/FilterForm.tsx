@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { HerramentalModelSchema } from "../Hooks/Validators/HerramentalEsp.js";
 import { useHerramental } from '../Hooks/useAxios/useHerramental.js'
 import MenuIcon from '@mui/icons-material/Menu';
-
+import useHerramentalByCodigoAlterno from '../Hooks/useHerramentalByCodigoAlterno.js'
 
 // Seleccionamos solo lo necesario para el filtro
 const FilterFormSchema = HerramentalModelSchema.pick({
@@ -16,6 +16,7 @@ const FilterFormSchema = HerramentalModelSchema.pick({
     hesp_IdEstanteria: true,
     hesp_IdDieSet: true,
     num_maquina_opc: true,
+    hesp_CodigoAlterno: true,
 });
 
 export default function FilterForm({
@@ -59,6 +60,7 @@ export default function FilterForm({
             hesp_IdEstanteria: 0,
             num_maquina_opc: 0,
             hesp_IdDieSet: 0,
+            hesp_CodigoAlterno: "",
         },
     });
 
@@ -82,6 +84,7 @@ export default function FilterForm({
             hesp_IdEstanteria: 0,
             num_maquina_opc: 0,
             hesp_IdDieSet: 0,
+            hesp_CodigoAlterno: "",
         });
         if (setGlobalFilter) {
             setGlobalFilter('');
@@ -92,7 +95,7 @@ export default function FilterForm({
         if (onResetFilters) {
             onResetFilters();
         }
-    };
+   };
 
     return (
         <>
@@ -130,6 +133,8 @@ export default function FilterForm({
                         <p className="text-white text-xs animate-pulse">Cargando filtros...</p>
                     ) : (
                         <div className="flex flex-col gap-2">
+                            {/* Código alterno */}
+
                             {/* Ubicación / Estanterías */}
                             <div>
                                 <label className="p-2 text-sm font-bold">Ubicación</label>

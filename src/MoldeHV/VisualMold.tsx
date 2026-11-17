@@ -218,7 +218,7 @@ export default function VisualMold() {
                                 Esquema Familia {familyInfo?.EsquemaFamilia || 'HEX'}
                             </h3>
                             <img
-                                src={`http://10.1.1.14:8000/api/media/esquemas/` + familyInfo?.EsquemaFamilia + `.png`}
+                                src={`http://10.1.1.52:8000/api/media/esquemas/` + familyInfo?.EsquemaFamilia + `.png`}
                                 alt="Esquema Técnico"
                                 className="w-full h-auto mb-4 border border-gray-100 p-2"
                             />

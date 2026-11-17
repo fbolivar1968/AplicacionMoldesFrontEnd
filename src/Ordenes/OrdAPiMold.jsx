@@ -151,7 +151,7 @@ export default function Orders() {
     ], [navigatingCode]);
 
     //DEBUGGING
-    fetch('http://10.1.1.14:8000/api/ordenes-produccion-forja')
+    fetch('http://10.1.1.52:8000/api/ordenes-produccion-forja')
         .then(res => res.json())
         .then(data => console.log('API RESPONSE:', data))
         .catch(err => console.error('API ERROR:', err));

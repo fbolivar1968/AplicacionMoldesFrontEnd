@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useAxios from './useAxios/IndexAx.js';
 
-const PlanoHerrUrlBase = "http://10.1.1.14/media/planos/";
+const PlanoHerrUrlBase = "http://10.1.1.52/media/planos/";
 
 export default function useToolPlano(idPlano: number | null | undefined) {
     const [planoUrl, setPlanoUrl] = useState<string>("");

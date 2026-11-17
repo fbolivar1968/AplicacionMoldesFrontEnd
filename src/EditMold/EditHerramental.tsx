@@ -280,7 +280,7 @@ export default function EditHerramental() {
     const schemaLookup = familiasSchema as any;
     const familyData = schemaLookup[familyCode] ?? schemaLookup['nan'];
     const literals: string[] = familyData?.Literals || [];
-    const schemeUrl = familyData ? `http://10.1.1.14:8000/api/media/esquemas/${familyData.EsquemaFamilia}.png` : "";
+    const schemeUrl = familyData ? `http://10.1.1.52:8000/api/media/esquemas/${familyData.EsquemaFamilia}.png` : "";
     const familyName = familyData?.Familia || "";
 
     const onSubmit = async (data: FormValues) => {

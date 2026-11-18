@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useAxios from './useAxios/IndexAx.js';
 
-const ImgHerrUrlBase = "http://10.1.1.52:8000/media/imagenes/";
+const ImgHerrUrlBase = "http://10.1.1.52:8000/api/media/imagenes/";
 
 export default function useToolImage(idImagen: number | null | undefined) {
     const [imageUrl, setImageUrl] = useState<string>("");

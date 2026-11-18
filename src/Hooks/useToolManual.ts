@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useAxios from './useAxios/IndexAx.js';
 
-const ManualHerrUrlBase = "http://10.1.1.52:8000/media/manuales/";
+const ManualHerrUrlBase = "http://10.1.1.52:8000/api/media/manuales/";
 
 export default function useToolManual(idManual: number | null | undefined) {
     const [manualUrl, setManualUrl] = useState<string>("");
